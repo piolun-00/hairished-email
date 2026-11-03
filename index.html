@@ -54,6 +54,9 @@
   .presets button { border:0; background:var(--soft); padding:5px 8px; border-radius:2px; }
   .presets button:hover { background:#e6e6e1; }
   .presets button[aria-pressed=true] { background:var(--on); color:var(--on-fg); }
+  /* Przełączniki dwustanowe: przyciski równej szerokości (wg najdłuższej etykiety) */
+  .presets.is--equal { display:inline-grid; grid-auto-flow:column; grid-auto-columns:1fr; }
+  .presets.is--equal button { text-align:center; min-width:64px; }
 
   .f { display:grid; gap:5px; min-width:0; }
   .f__label { color:var(--muted); }
@@ -176,12 +179,12 @@
 
   <section class="preview">
     <div class="preview__bar">
-      <div class="presets" id="mode">
+      <div class="presets is--equal" id="mode">
         <button type="button" data-m="light" aria-pressed="true">Jasny</button>
         <button type="button" data-m="dark" aria-pressed="false">Ciemny</button>
       </div>
       <span class="sep"></span>
-      <div class="presets" id="variant">
+      <div class="presets is--equal" id="variant">
         <button type="button" data-v="fluid" aria-pressed="true" title="Apple Mail, Thunderbird, Outlook, iPhone — zawija się do 600 px">Płynna</button>
         <button type="button" data-v="gmail" aria-pressed="false" title="Gmail — stała kolumna, bo Gmail wycina maksymalną szerokość">Gmail</button>
       </div>
