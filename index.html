@@ -61,6 +61,14 @@
   .f { display:grid; gap:5px; min-width:0; }
   .f__label { color:var(--muted); }
   .f__hint { color:var(--muted); font-size:12px; }
+  .f__warn { color:#9a5b00; font-size:12px; }
+  .f input.is--warn { border-color:#d9a24a; }
+  .guide { border-color:var(--fg); animation:guide-in .2s ease; }
+  .guide ol { margin:0; padding-left:20px; display:grid; gap:7px; }
+  .guide li::marker { color:var(--muted); font-variant-numeric:tabular-nums; }
+  .guide kbd { font:inherit; font-size:12px; padding:1px 5px; border:1px solid var(--line); border-radius:2px; background:var(--soft); }
+  .guide .link.is--icon { border:0; background:none; text-decoration:none; color:var(--muted); cursor:pointer; padding:0 2px; }
+  @keyframes guide-in { from { opacity:0; transform:translateY(-4px); } }
   .f input { width:100%; border:1px solid var(--line); background:var(--panel); border-radius:2px; padding:7px 9px; }
   .f input:focus { outline:2px solid var(--fg); outline-offset:-1px; }
   .grid2 { display:grid; grid-template-columns:minmax(0,1fr) minmax(0,1fr); gap:10px; align-items:start; }
@@ -134,6 +142,7 @@
   <section class="panel">
     <div class="panel__inner">
       <h1 class="h">Stopka pracownika</h1>
+      <div class="card" id="testbar" hidden style="border-color:#9a5b00"><div class="card__body"><p class="note" style="color:#9a5b00"><b style="color:#9a5b00">Tryb testowy telefonu.</b> Stopka zawiera 5&nbsp;wariantów numeru (A–E). Kliknij „Kopiuj dla Gmaila”, wklej do <b>treści nowej wiadomości</b> w&nbsp;Gmailu (nie do podpisu), wyślij do siebie i&nbsp;stuknij każdy wariant na iPhonie.</p></div></div>
 
       <div class="card">
         <div class="card__head">Gotowe ustawienia</div>
@@ -146,10 +155,10 @@
           <label class="f"><span class="f__label">Imię i&nbsp;nazwisko</span><input id="name" placeholder="Helena Karaplios"></label>
           <label class="f"><span class="f__label">Stanowisko</span><input id="role" placeholder="Founder"></label>
           <div class="grid2">
-            <label class="f"><span class="f__label">Telefon</span><input id="phone" type="tel" placeholder="+48 662 060 956"></label>
-            <label class="f"><span class="f__label">E-mail</span><input id="email" type="email" placeholder="helena@hairished.com"></label>
+            <label class="f"><span class="f__label">Telefon</span><input id="phone" type="tel" inputmode="tel" placeholder="+48 662 060 956"><span class="f__warn" id="phoneWarn" hidden></span></label>
+            <label class="f"><span class="f__label">E-mail</span><input id="email" type="email" inputmode="email" autocapitalize="off" spellcheck="false" placeholder="helena@hairished.com"><span class="f__warn" id="emailWarn" hidden></span></label>
           </div>
-          <p class="f__hint">E-mail podpowiada się z&nbsp;imienia&nbsp;— możesz go nadpisać.</p>
+          <p class="f__hint">E-mail podpowiada się z&nbsp;imienia&nbsp;— możesz go nadpisać. Telefon sam ułoży się w&nbsp;format +48&nbsp;XXX&nbsp;XXX&nbsp;XXX.</p>
         </div>
       </form>
 
@@ -162,6 +171,11 @@
           <button class="btn is--wide" type="button" onclick="downloadHtml()">Pobierz plik HTML <small>Thunderbird · Outlook Windows</small></button>
           <button class="btn is--wide" type="button" onclick="copyLink()">Kopiuj link dla pracownika <small>z&nbsp;wpisanymi danymi</small></button>
         </div>
+      </div>
+
+      <div class="card guide" id="guide" hidden>
+        <div class="card__head"><span id="guideTitle" style="color:var(--fg)">Co dalej</span><button type="button" class="link is--icon" onclick="$('guide').hidden=true" aria-label="Zamknij">✕</button></div>
+        <div class="card__body" id="guideBody"></div>
       </div>
 
       <div class="card">
@@ -231,6 +245,8 @@ const DISCLAIMER_RAW = "©2026 HAIRISHED®. WSZELKIE PRAWA ZASTRZEŻONE. TREŚĆ
 // twarde spacje po jednoliterowych słowach (Z, I, W, A…) i przed myślnikiem — typografia klauzuli
 const DISCLAIMER = DISCLAIMER_RAW.replace(/(^|\s)([AIOUWZ])\s/g, '$1$2\u00a0').replace(/(^|\s)([AIOUWZ])\s/g, '$1$2\u00a0').replace(/\s—/g, '\u00a0—');
 
+const TEST_TEL = new URLSearchParams(location.search).get('test') === 'tel';
+
 const PRESETS = [
   { name:'Helena Karaplios',  role:'Founder', phone:'+48 662 060 956', email:'helena@hairished.com' },
   { name:'Stathis Karaplios', role:'Founder', phone:'+48 602 500 401', email:'stathis@hairished.com' },
@@ -260,6 +276,15 @@ function signature(p, fixed = false) {
   const tel = 'tel:' + p.phone.replace(/[^\d+]/g, '');
   const contact = [];
   if (p.phone) contact.push(`<a href="${esc(tel)}" style="${a}">${esc(p.phone)}</a>`);
+  if (p.phone && TEST_TEL) {   // tryb diagnostyczny: ?test=tel — warianty numeru do sprawdzenia na iPhonie
+    const digits = tel.slice(4), zw = esc(p.phone).replace(/ /g, '&#8203; ');
+    contact.push(
+      `A: <a href="${esc(tel)}" style="${a}">${esc(p.phone)}</a>`,
+      `B: ${esc(p.phone)}`,
+      `C: <a href="${esc(tel)}" style="${a}">${zw}</a>`,
+      `D: <a href="tel:00${esc(digits.replace('+', ''))}" style="${a}">${esc(p.phone)}</a>`,
+      `E: <a href="${esc(tel)}" style="${a}">Zadzwoń</a>`);
+  }
   if (p.email) contact.push(`<a href="mailto:${esc(p.email)}" style="${a}">${esc(p.email)}</a>`);
   contact.push(`<a href="https://${WEB}" style="${a}">${WEB}</a>`);
   const who = [p.name, p.role].filter(Boolean).map(esc).join('<br>');
@@ -327,6 +352,48 @@ function suggestEmail() {
   $('email').value = s ? `${s}@${DOMAIN}` : '';
 }
 
+/* ==========================================================
+   PILNOWANIE FORMATU — każda stopka ma wyglądać identycznie
+   ========================================================== */
+function formatPhone(raw) {
+  let d = raw.replace(/[^\d+]/g, '');
+  if (!d) return { value:'', warn:'' };
+  if (d.startsWith('00')) d = '+' + d.slice(2);
+  if (!d.startsWith('+')) d = (d.length === 11 && d.startsWith('48')) ? '+' + d : (d.length === 9 ? '+48' + d : d);
+  if (d.startsWith('+48')) {
+    const n = d.slice(3);
+    if (n.length === 9) return { value:`+48 ${n.slice(0,3)} ${n.slice(3,6)} ${n.slice(6)}`, warn:'' };
+    return { value:'+48 ' + n.replace(/(\d{3})(?=\d)/g, '$1 '), warn:`Polski numer ma 9 cyfr po +48 — tu jest ${n.length}.` };
+  }
+  if (!d.startsWith('+')) return { value:raw.trim(), warn:'Dodaj kierunkowy kraju, np. +48 — inaczej numer nie zadziała za granicą.' };
+  const cc = d.slice(1, 3), rest = d.slice(3);   // inne kraje: +CC i grupy po 3 cyfry (ostatnia 3–4, bez samotnej cyfry)
+  const g = rest.match(/\d{1,3}/g) || [];
+  if (g.length > 1 && g[g.length - 1].length === 1) g.splice(-2, 2, g[g.length - 2] + g[g.length - 1]);
+  return { value:`+${cc} ${g.join(' ')}`.trim(), warn: d.length < 9 ? 'Numer wygląda na za krótki.' : '' };
+}
+
+function checkEmail(raw) {
+  const v = raw.trim().toLowerCase();
+  if (!v) return { value:'', warn:'', bad:false };
+  if (!/^[^\s@]+@[^\s@]+\.[a-z]{2,}$/.test(v)) return { value:v, warn:'To nie wygląda na adres e-mail.', bad:true };
+  if (!v.endsWith('@' + DOMAIN)) return { value:v, warn:`Inna domena niż ${DOMAIN} — na pewno?`, bad:false };
+  return { value:v, warn:'', bad:false };
+}
+
+function showWarn(field, msg) {
+  $(field + 'Warn').textContent = msg; $(field + 'Warn').hidden = !msg;
+  $(field).classList.toggle('is--warn', !!msg);
+}
+
+function normalizeFields() {
+  const ph = formatPhone($('phone').value); $('phone').value = ph.value; showWarn('phone', ph.warn);
+  const em = checkEmail($('email').value); $('email').value = em.value; showWarn('email', em.warn);
+  $('name').value = $('name').value.replace(/\s+/g, ' ').trim();
+  $('role').value = $('role').value.replace(/\s+/g, ' ').trim();
+  render();
+  return !em.bad;
+}
+
 function render() {
   const d = data();
   $('sig').innerHTML = signature(d, variant === 'gmail');   // domyślnie wersja płynna
@@ -336,12 +403,13 @@ function render() {
 function fill(p, touched = true) {
   F.forEach(k => $(k).value = p[k] || '');
   emailTouched = touched;
-  render();
+  normalizeFields();
 }
 
 $('presets').innerHTML = PRESETS.map((p, i) => `<button type="button" data-i="${i}" aria-pressed="false">${esc(p.name)}</button>`).join('');
 $('presets').addEventListener('click', e => { const i = e.target.dataset.i; if (i != null) fill(PRESETS[i]); });
 F.forEach(k => $(k).addEventListener('input', () => { if (k === 'email') emailTouched = $('email').value !== ''; if (k === 'name') suggestEmail(); render(); }));
+F.forEach(k => $(k).addEventListener('change', normalizeFields));   // formatowanie po wyjściu z pola, nie w trakcie pisania
 
 /* Podgląd: tryb i szerokość ekranu */
 const DEVICES = { 320:'iPhone SE', 375:'iPhone mini', 390:'iPhone', 430:'iPhone Pro Max', 600:'tablet / wąskie okno poczty', 760:'okno poczty na komputerze' };
@@ -383,7 +451,50 @@ updatePreview();
    AKCJE
    ========================================================== */
 function toast(msg) { const t = $('toast'); t.textContent = msg; t.classList.add('show'); clearTimeout(t._h); t._h = setTimeout(() => t.classList.remove('show'), 3200); }
-function check() { const p = data(); if (!p.name) { toast('Wpisz imię i nazwisko.'); $('name').focus(); return null; } return p; }
+function check() {
+  const okEmail = normalizeFields();
+  const p = data();
+  if (!p.name) { toast('Wpisz imię i nazwisko.'); $('name').focus(); return null; }
+  if (!okEmail) { toast('Popraw adres e-mail.'); $('email').focus(); return null; }
+  return p;
+}
+
+/* ==========================================================
+   CO DALEJ — kroki dla programu, do którego właśnie skopiowano stopkę
+   ========================================================== */
+const GUIDES = {
+  gmail: { t:'Co dalej — Gmail', s:[
+    'Otwórz <a class="link" href="https://mail.google.com/mail/u/0/#settings/general" target="_blank">ustawienia Gmaila</a> i&nbsp;przewiń do sekcji <b>Podpis</b>.',
+    '<b>Utwórz nowy</b> (albo w&nbsp;istniejącym usuń starą treść: <kbd>Cmd</kbd>+<kbd>A</kbd>, <kbd>Delete</kbd>) i&nbsp;wklej: <kbd>Cmd</kbd>+<kbd>V</kbd>.',
+    'Zaznacz „Wstaw ten podpis przed cytowanym tekstem… i&nbsp;usuń poprzedzający go wiersz „--””.',
+    'Ustaw podpis jako domyślny dla nowych wiadomości i&nbsp;odpowiedzi.',
+    'Przewiń na sam dół strony i&nbsp;kliknij <b>Zapisz zmiany</b>.' ]},
+  outlook: { t:'Co dalej — Outlook / iPhone', s:[
+    '<b>Outlook</b> (nowy, w&nbsp;przeglądarce, na Macu): Ustawienia → Konta → Podpisy → Nowy podpis → wklej <kbd>Cmd</kbd>+<kbd>V</kbd> → Zapisz. Ustaw go jako domyślny.',
+    '<b>Outlook klasyczny (Windows):</b> Plik → Opcje → Poczta → Podpisy → Nowy → wklej.',
+    '<b>iPhone:</b> Ustawienia → Aplikacje → Mail → Podpis → wklej. Jeśli zniknie formatowanie, potrząśnij telefonem i&nbsp;wybierz „Cofnij zmianę atrybutów”.',
+    'Wyślij maila testowego do siebie.' ]},
+  apple: { t:'Co dalej — Apple Mail', s:[
+    'W&nbsp;Mail: Ustawienia → Podpisy → <kbd>+</kbd>, wpisz dowolny tekst, odznacz „Zawsze dopasowuj do domyślnej czcionki”. Zamknij Mail (<kbd>Cmd</kbd>+<kbd>Q</kbd>).',
+    'Otwórz najnowszy plik <code>.mailsignature</code> w&nbsp;TextEdit, zostaw linijki nagłówka i&nbsp;zastąp resztę skopiowanym kodem.',
+    'Zapisz i&nbsp;zablokuj plik (<kbd>Cmd</kbd>+<kbd>I</kbd> → „Zablokowany”), potem uruchom Mail.',
+    'Gdzie leży plik i&nbsp;szczegóły: <a class="link" href="instrukcja.html#apple" target="_blank">pełna instrukcja</a>.' ]},
+  html: { t:'Co dalej — plik HTML', s:[
+    '<b>Thunderbird:</b> Ustawienia kont → „Dołącz podpis z&nbsp;pliku” → wskaż pobrany plik. Włącz tworzenie wiadomości w&nbsp;HTML.',
+    '<b>Outlook klasyczny (Windows):</b> zmień końcówkę pliku na <code>.htm</code> i&nbsp;wrzuć go do <code>%APPDATA%\\Microsoft\\Signatures</code>.',
+    'Szczegóły: <a class="link" href="instrukcja.html#thunderbird" target="_blank">pełna instrukcja</a>.' ]},
+  link: { t:'Co dalej — link dla pracownika', s:[
+    'Wyślij link pracownikowi: mailem, na WhatsAppie albo Slacku.',
+    'Po otwarciu zobaczy swoje dane i&nbsp;kliknie przycisk dla swojego programu pocztowego.',
+    'Pod przyciskiem pokażą mu się kroki instalacji, takie jak ten.' ]},
+};
+function showGuide(key) {
+  const g = GUIDES[key];
+  $('guideTitle').textContent = g.t;
+  $('guideBody').innerHTML = '<ol>' + g.s.map(x => `<li>${x}</li>`).join('') + '</ol>';
+  $('guide').hidden = false;
+  $('guide').scrollIntoView({ behavior:'smooth', block:'nearest' });
+}
 
 async function copyRich(fixed) {
   const p = check(); if (!p) return;
@@ -393,13 +504,14 @@ async function copyRich(fixed) {
       'text/html': new Blob([html], { type:'text/html' }),
       'text/plain': new Blob([[p.name, p.role, p.phone, p.email, WEB].filter(Boolean).join('\n')], { type:'text/plain' })
     })]);
-    return toast('Skopiowano. Wklej w\u00a0ustawieniach podpisu (Cmd+V).');
+    toast('Skopiowano.'); return showGuide(fixed ? 'gmail' : 'outlook');
   } catch (e) { /* zapasowo: zaznaczenie ukrytej kopii */ }
   const el = $('clip'); el.innerHTML = html;
   const r = document.createRange(), s = getSelection();
   r.selectNodeContents(el); s.removeAllRanges(); s.addRange(r);
   const ok = document.execCommand('copy'); s.removeAllRanges();
-  toast(ok ? 'Skopiowano. Wklej w\u00a0ustawieniach podpisu (Cmd+V).' : 'Nie udało się skopiować\u00a0— spróbuj w\u00a0innej przeglądarce.');
+  toast(ok ? 'Skopiowano.' : 'Nie udało się skopiować\u00a0— spróbuj w\u00a0innej przeglądarce.');
+  if (ok) showGuide(fixed ? 'gmail' : 'outlook');
 }
 
 async function copyText(text, msg) {
@@ -409,7 +521,7 @@ async function copyText(text, msg) {
 
 function copyAppleMail() {
   const p = check(); if (!p) return;
-  copyText(appleMail(p), 'Kod skopiowany\u00a0— wklej go w\u00a0plik .mailsignature (instrukcja → Apple Mail).');
+  copyText(appleMail(p), 'Kod skopiowany.'); showGuide('apple');
 }
 
 function downloadHtml() {
@@ -419,15 +531,17 @@ function downloadHtml() {
   a.download = `stopka-${slug(p.name)}.html`;
   document.body.appendChild(a); a.click(); a.remove();
   setTimeout(() => URL.revokeObjectURL(a.href), 1000);
-  toast(`Pobrano ${a.download}`);
+  toast(`Pobrano ${a.download}`); showGuide('html');
 }
 
 function copyLink() {
   const p = check(); if (!p) return;
   const u = new URL(location.href.split('?')[0]);
   F.forEach(k => p[k] && u.searchParams.set(k, p[k]));
-  copyText(u.href, 'Link skopiowany\u00a0— pracownik otworzy go i\u00a0skopiuje swoją stopkę.');
+  copyText(u.href, 'Link skopiowany.'); showGuide('link');
 }
+
+if (TEST_TEL) $('testbar').hidden = false;
 
 /* start: dane z linku albo pierwszy preset */
 const q = new URLSearchParams(location.search);
