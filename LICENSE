@@ -1,18 +1,22 @@
 HAIRISHED — generator stopek mailowych
-Copyright © 2026 Radosław Prośniak (KHOREI). Wszelkie prawa zastrzeżone.
 
 
-1. ZAMAWIAJĄCY
+1. STRONY
 
-Generator został wykonany dla:
-
+Zamawiający:
   BLURBSTUDIO Sp. z o.o.
   ul. Jana Zamoyskiego 61/4, 30-519 Kraków
   KRS 0000886803 · NIP 6793213106 · REGON 388291790
 
-oraz marki HAIRISHED®
+Marka, dla której przygotowano narzędzie:
+  HAIRISHED®
 
-— dalej łącznie „Zamawiający”.
+Wykonawca (podwykonawca Zamawiającego):
+  Radosław Prośniak (KHOREI)
+
+Narzędzie jest realizacją Zamawiającego, prowadzoną w modelu white label.
+Wykonawca nie występuje wobec HAIRISHED® jako strona i nie jest
+oznaczony w interfejsie narzędzia.
 
 
 2. PRZEDMIOT
@@ -22,18 +26,18 @@ szablon stopki mailowej i instrukcja instalacji) stanowi utwór
 w rozumieniu ustawy o prawie autorskim i prawach pokrewnych.
 
 Narzędzie służy wyłącznie do tworzenia stopek mailowych osób
-pracujących dla HAIRISHED® i Zamawiającego.
+pracujących dla HAIRISHED®.
 
 
 3. ZAKRES KORZYSTANIA
 
-Zamawiający oraz jego pracownicy i współpracownicy mogą bez ograniczeń
-czasowych:
+Zamawiający, HAIRISHED® oraz ich pracownicy i współpracownicy mogą bez
+ograniczeń czasowych:
   — korzystać z generatora,
   — tworzyć, kopiować, pobierać i instalować stopki,
   — wysyłać wiadomości opatrzone stopkami.
 
-Bez pisemnej zgody autora NIE wolno:
+Bez pisemnej zgody Wykonawcy i Zamawiającego NIE wolno:
   — powielać kodu ani szablonu w całości lub w części w innych projektach,
   — odsprzedawać, użyczać ani udostępniać kodu osobom trzecim,
   — tworzyć opracowań i utworów zależnych poza potrzebami HAIRISHED®,
@@ -42,8 +46,8 @@ Bez pisemnej zgody autora NIE wolno:
 Repozytorium jest publiczne wyłącznie z przyczyn technicznych (hosting
 na GitHub Pages). Publiczna dostępność kodu nie jest licencją open source.
 
-Jeżeli autora i Zamawiającego łączy umowa, która reguluje prawa do
-generatora inaczej, pierwszeństwo ma umowa.
+Prawa do kodu między Wykonawcą a Zamawiającym reguluje łącząca ich
+umowa. W razie rozbieżności z niniejszą notą pierwszeństwo ma umowa.
 
 
 4. ZNAKI I IDENTYFIKACJA WIZUALNA
@@ -53,35 +57,51 @@ wizualnej HAIRISHED® należą do właściciela marki. Niniejsza nota ich
 nie obejmuje i nie udziela do nich żadnych praw.
 
 
-5. KROJE PISMA — WYMAGANA LICENCJA WEBOWA ZAMAWIAJĄCEGO
+5. KROJE PISMA — LICENCJE PO STRONIE ZAMAWIAJĄCEGO
 
 Stopka korzysta z komercyjnych krojów DGM Gleff i Ufficio Mono. Prawa
-do nich przysługują ich autorom. Repozytorium zawiera wyłącznie pliki
-webowe (WOFF2 i WOFF) w katalogu fonty/, udostępniane tylko na potrzeby
-wyświetlania stopek. Pliki źródłowe krojów (OTF) nie są tu przechowywane.
+do nich przysługują ich autorom. Kroje nie są częścią utworu Wykonawcy
+i nie są objęte niniejszą notą.
 
-Warunkiem korzystania z plików z katalogu fonty/ jest posiadanie przez
-Zamawiającego ważnych licencji webowych (webfont) na oba kroje. Zakres
-licencji musi obejmować:
+Licencje na kroje nabywa, posiada i utrzymuje Zamawiający (lub
+HAIRISHED®). Wykonawca nie jest licencjobiorcą tych krojów, nie nabywał
+ich licencji, nie ustala ani nie weryfikuje ich zakresu i nie udziela
+do nich żadnych uprawnień.
+
+Pliki webowe krojów (WOFF2 i WOFF) w katalogu fonty/ umieszczono
+na wniosek Zamawiającego, na podstawie jego oświadczenia, że posiada
+licencje webowe obejmujące to zastosowanie. Pliki źródłowe krojów (OTF)
+nie są przechowywane w repozytorium.
+
+Wyłączną odpowiedzialność za to, że licencje obejmują:
   — serwowanie plików z domeny, z której korzysta stopka
-    (obecnie piolun-00.github.io), oraz
-  — użycie krojów w wiadomościach e-mail. Niektóre odlewnie licencjonują
-    e-mail osobno od stron internetowych.
+    (obecnie piolun-00.github.io),
+  — użycie krojów w wiadomościach e-mail (niektóre odlewnie licencjonują
+    e-mail osobno od stron internetowych),
+  — liczbę użytkowników lub wysyłanych wiadomości, jeśli licencja ją
+    ogranicza,
+ponosi Zamawiający.
 
-Za posiadanie i zakres licencji odpowiada Zamawiający. Gdyby licencje
-wygasły albo ich zakres nie wystarczał, należy usunąć katalog fonty/.
-Stopki zachowają układ i wyświetlą się krojami systemowymi.
+Na każde żądanie Zamawiającego lub właściciela praw do krojów pliki
+z katalogu fonty/ zostaną niezwłocznie usunięte. Stopki zachowają
+wtedy układ i wyświetlą się krojami systemowymi.
 
 Plików z katalogu fonty/ nie wolno pobierać ani używać do innych celów.
 
 
 6. HOSTING I ZASOBY
 
-Logo, sygnet i fonty są pobierane przez programy pocztowe odbiorców
-z adresu https://piolun-00.github.io/hairished-email/. Usunięcie
-repozytorium, zmiana jego nazwy lub nazw plików w katalogach obrazki/
-i fonty/ spowoduje, że w wysłanych wcześniej wiadomościach przestaną
-się wyświetlać logo i fonty.
+Repozytorium służy wyłącznie jako techniczny hosting plików
+wykorzystywanych przez stopki. Logo, sygnet i fonty są pobierane przez
+programy pocztowe odbiorców z adresu
+https://piolun-00.github.io/hairished-email/.
+
+Zamawiający może w każdej chwili zażądać przeniesienia repozytorium
+na własne konto lub podpięcia własnej domeny.
+
+Usunięcie repozytorium, zmiana jego nazwy lub nazw plików w katalogach
+obrazki/ i fonty/ spowoduje, że w wysłanych wcześniej wiadomościach
+przestaną się wyświetlać logo i fonty.
 
 
 7. WYŚWIETLANIE
