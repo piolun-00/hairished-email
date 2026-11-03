@@ -6,8 +6,7 @@
 <title>HAIRISHED&nbsp;— generator stopek mailowych</title>
 <!--
   HAIRISHED — generator stopek mailowych
-  Wykonano dla BLURBSTUDIO Sp. z o.o. (KRS 0000886803) i HAIRISHED®.
-  Copyright © 2026 Radosław Prośniak (KHOREI). Warunki: LICENSE.
+  Realizacja: BLURBSTUDIO Sp. z o.o. (KRS 0000886803). Warunki: LICENSE.
   Kroje DGM Gleff i Ufficio Mono: wymagana licencja webowa Zamawiającego.
 -->
 <link rel="icon" href="obrazki/sygnet-light.png">
@@ -16,7 +15,7 @@
   @font-face { font-family:'DGM Gleff'; src:url('fonty/dgm-gleff-regular.woff2') format('woff2'); }
   @font-face { font-family:'Ufficio Mono'; src:url('fonty/ufficio-mono-400.woff2') format('woff2'); }
 
-  /* Narzędzie robocze: monochromatyczne, jak edytor brandmanuala KHOREI */
+  /* Narzędzie robocze: monochromatyczne, żeby nie konkurowało z podglądem stopki */
   :root {
     --bg:#f4f4f2; --panel:#ffffff; --fg:#111111; --muted:#77776f; --line:#e2e2dd; --soft:#f0f0ec; --on:#111111; --on-fg:#ffffff;
     --ui:"ABC Areal Variable", system-ui, -apple-system, "Helvetica Neue", Arial, sans-serif;
@@ -76,9 +75,14 @@
   .preview__info { color:var(--muted); margin-left:auto; white-space:nowrap; }
   .preview__stage { flex:1; overflow:auto; padding:32px; }
   .preview__bar .sep { width:1px; height:20px; background:var(--line); }
-  .preview__bar input[type=range] { flex:1; min-width:120px; max-width:260px; accent-color:var(--fg); }
   .preview__bar #width button { font-variant-numeric:tabular-nums; }
-  .frame { width:760px; max-width:100%; margin:0 auto; transition:width .2s ease; }
+  .frame { position:relative; width:760px; max-width:100%; margin:0 auto; transition:width .2s ease; }
+  .frame.is--drag { transition:none; }
+  /* Pastylka przy prawej krawędzi: przeciągnij, by zwęzić lub poszerzyć podgląd */
+  .handle { position:absolute; top:30px; bottom:0; right:-22px; width:22px; display:flex; align-items:center; justify-content:center; cursor:ew-resize; touch-action:none; }
+  .handle::before { content:""; width:6px; height:44px; border-radius:3px; background:#c9c9c3; transition:background .15s, height .15s; }
+  .handle:hover::before, .frame.is--drag .handle::before { background:var(--fg); height:56px; }
+  body.is--resizing { cursor:ew-resize; user-select:none; }
   .ruler { position:relative; height:22px; margin-bottom:8px; color:var(--muted); font-size:11px; font-variant-numeric:tabular-nums;
     background:
       repeating-linear-gradient(to right, #b9b9b2 0 1px, transparent 1px 50px) left bottom / 100% 9px no-repeat,
@@ -100,7 +104,7 @@
     .panel { border-right:0; border-bottom:1px solid var(--line); overflow:visible; }
     .preview__stage { padding:16px; }
     .mail { padding:24px 20px; }
-    .preview__bar input[type=range] { display:none; }
+    .handle { display:none; }
     .grid2 { grid-template-columns:1fr; }
     .top__brand span { display:none; }
   }
@@ -165,7 +169,7 @@
       </div>
 
       <p class="note">Jak zainstalować stopkę w&nbsp;danym programie&nbsp;— <a class="link" href="instrukcja.html" target="_blank">instrukcja</a>.</p>
-      <p class="note" style="font-size:12px">Wykonano dla BLURBSTUDIO Sp. z&nbsp;o.o. i&nbsp;HAIRISHED®<br>© 2026 Radosław Prośniak (KHOREI) · <a class="link" href="https://github.com/piolun-00/hairished-email/blob/main/LICENSE" target="_blank">Licencja</a></p>
+      <p class="note" style="font-size:12px">Realizacja: BLURBSTUDIO Sp.&nbsp;z&nbsp;o.o. · <a class="link" href="https://github.com/piolun-00/hairished-email/blob/main/LICENSE" target="_blank">Licencja</a></p>
     </div>
   </section>
 
@@ -177,19 +181,19 @@
       </div>
       <span class="sep"></span>
       <div class="presets" id="width">
-        <button type="button" data-w="320" aria-pressed="false">320</button>
-        <button type="button" data-w="375" aria-pressed="false">375</button>
-        <button type="button" data-w="390" aria-pressed="false">390</button>
-        <button type="button" data-w="430" aria-pressed="false">430</button>
-        <button type="button" data-w="600" aria-pressed="false">600</button>
-        <button type="button" data-w="760" aria-pressed="true">Pełna</button>
+        <button type="button" data-w="320" aria-pressed="false" title="iPhone SE">320</button>
+        <button type="button" data-w="375" aria-pressed="false" title="iPhone mini">375</button>
+        <button type="button" data-w="390" aria-pressed="false" title="iPhone">390</button>
+        <button type="button" data-w="430" aria-pressed="false" title="iPhone Pro Max">430</button>
+        <button type="button" data-w="600" aria-pressed="false" title="Tablet / wąskie okno poczty">600</button>
+        <button type="button" data-w="760" aria-pressed="true" title="Okno poczty na komputerze">Komputer</button>
       </div>
-      <input type="range" id="wr" min="300" max="900" step="1" value="760" aria-label="Szerokość podglądu">
       <span class="preview__info" id="info"></span>
     </div>
     <div class="preview__stage">
       <div class="frame" id="frame">
       <div class="ruler"><span class="r0">0</span><span class="rw" id="rw">760 px</span></div>
+      <div class="handle" id="handle" title="Przeciągnij, aby zmienić szerokość"></div>
       <div class="mail" id="mail">
         <div class="mail__meta">Do: klient@example.com<br>Temat: Materiały</div>
         <div class="mail__body">Dzień dobry,<br>przesyłam materiały w&nbsp;załączniku.<br><br>Pozdrawiam</div>
@@ -323,24 +327,37 @@ $('presets').addEventListener('click', e => { const i = e.target.dataset.i; if (
 F.forEach(k => $(k).addEventListener('input', () => { if (k === 'email') emailTouched = $('email').value !== ''; if (k === 'name') suggestEmail(); render(); }));
 
 /* Podgląd: tryb i szerokość ekranu */
-const DEVICES = { 320:'iPhone SE', 375:'iPhone mini', 390:'iPhone', 430:'iPhone Pro Max', 600:'okno maila', 760:'komputer' };
+const DEVICES = { 320:'iPhone SE', 375:'iPhone mini', 390:'iPhone', 430:'iPhone Pro Max', 600:'tablet / wąskie okno poczty', 760:'okno poczty na komputerze' };
+const MIN_W = 300, MAX_W = 1000;
 let mode = 'light', width = 760;
 
 function updatePreview() {
   $('mail').classList.toggle('sim-dark', mode === 'dark');
   $('frame').style.width = width + 'px';
   $('frame').classList.toggle('is--phone', width <= 480);
-  $('wr').value = width;
   $('rw').textContent = width + ' px';
   [...$('mode').children].forEach(b => b.setAttribute('aria-pressed', b.dataset.m === mode));
   [...$('width').children].forEach(b => b.setAttribute('aria-pressed', +b.dataset.w === width));
-  const dev = DEVICES[width] || (width <= 480 ? 'telefon' : width <= 700 ? 'tablet / okno maila' : 'komputer');
+  const dev = DEVICES[width] || (width <= 480 ? 'telefon' : width <= 700 ? 'tablet / wąskie okno poczty' : 'okno poczty na komputerze');
   $('info').textContent = `${width} px · ${dev} · ${mode === 'dark' ? 'tryb ciemny (symulacja)' : 'tryb jasny'}`;
 }
 
 $('mode').addEventListener('click', e => { if (e.target.dataset.m) { mode = e.target.dataset.m; updatePreview(); } });
 $('width').addEventListener('click', e => { if (e.target.dataset.w) { width = +e.target.dataset.w; updatePreview(); } });
-$('wr').addEventListener('input', e => { width = +e.target.value; updatePreview(); });
+
+/* przeciąganie pastylki: ramka jest wyśrodkowana, więc ruch o 1 px zmienia szerokość o 2 px */
+$('handle').addEventListener('pointerdown', e => {
+  e.preventDefault();
+  const h = $('handle'); h.setPointerCapture(e.pointerId);
+  const x0 = e.clientX, w0 = width;
+  const stage = document.querySelector('.preview__stage');
+  const maxW = Math.min(MAX_W, stage.clientWidth - 64);
+  $('frame').classList.add('is--drag'); document.body.classList.add('is--resizing');
+  const move = ev => { width = Math.round(Math.max(MIN_W, Math.min(maxW, w0 + 2 * (ev.clientX - x0)))); updatePreview(); };
+  const up = () => { h.removeEventListener('pointermove', move); h.removeEventListener('pointerup', up); h.removeEventListener('pointercancel', up);
+    $('frame').classList.remove('is--drag'); document.body.classList.remove('is--resizing'); };
+  h.addEventListener('pointermove', move); h.addEventListener('pointerup', up); h.addEventListener('pointercancel', up);
+});
 updatePreview();
 
 /* ==========================================================
