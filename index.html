@@ -65,6 +65,9 @@
   .actions { display:grid; gap:6px; }
   .note { color:var(--muted); margin:0; }
   .note b { color:var(--fg); font-weight:500; }
+  /* Każde zdanie od nowej linii, wiersze wyrównane długością — bez zawieszonych pojedynczych słów */
+  .note--balance span { display:block; text-wrap:balance; }
+  .note { text-wrap:pretty; }
   .link { color:var(--muted); text-decoration:underline; text-underline-offset:.15em; }
   .link:hover { color:var(--fg); }
 
@@ -147,7 +150,7 @@
         <div class="card__head">Eksport<span>wybierz program pocztowy</span></div>
         <div class="card__body actions">
           <button class="btn is--primary is--wide" type="button" onclick="copyRich()">Kopiuj stopkę <small>Gmail · Outlook · iPhone</small></button>
-          <button class="btn is--wide" type="button" onclick="copyAppleMail()">Kopiuj kod <small>Apple Mail</small></button>
+          <button class="btn is--wide" type="button" onclick="copyAppleMail()">Kopiuj kod <small>Apple&nbsp;Mail</small></button>
           <button class="btn is--wide" type="button" onclick="downloadHtml()">Pobierz plik HTML <small>Thunderbird · Outlook Windows</small></button>
           <button class="btn is--wide" type="button" onclick="copyLink()">Kopiuj link dla pracownika <small>z&nbsp;wpisanymi danymi</small></button>
         </div>
@@ -156,7 +159,7 @@
       <div class="card">
         <div class="card__head">Fonty marki</div>
         <div class="card__body">
-          <p class="note"><b>DGM Gleff</b> i&nbsp;<b>Ufficio Mono</b> wyświetlą się, gdy stopka jest wysyłana z&nbsp;<b>Apple Mail</b> lub <b>Thunderbirda</b>, a&nbsp;odbiorca czyta pocztę w&nbsp;Apple Mail, Outlooku na Macu, Thunderbirdzie lub Samsung Email. W&nbsp;Gmailu, Outlooku na Windowsie i&nbsp;na iPhonie (jako nadawca) pojawią się kroje zastępcze: Georgia i&nbsp;systemowy monospace. Układ, logo i&nbsp;kolory są wszędzie te&nbsp;same.</p>
+          <p class="note"><b>DGM&nbsp;Gleff</b> i&nbsp;<b>Ufficio&nbsp;Mono</b> wyświetlą się, gdy stopka jest wysyłana z&nbsp;<b>Apple&nbsp;Mail</b> lub <b>Thunderbirda</b>, a&nbsp;odbiorca czyta pocztę w&nbsp;Apple&nbsp;Mail, Outlooku na Macu, Thunderbirdzie lub Samsung&nbsp;Email. W&nbsp;Gmailu, Outlooku na Windowsie i&nbsp;na iPhonie (jako nadawca) pojawią się kroje zastępcze: Georgia i&nbsp;systemowy monospace. Układ, logo i&nbsp;kolory są wszędzie te&nbsp;same.</p>
           <a class="link" href="instrukcja.html#fonty" target="_blank">Pełna tabela →</a>
         </div>
       </div>
@@ -192,7 +195,7 @@
         <div class="mail__body">Dzień dobry,<br>przesyłam materiały w&nbsp;załączniku.<br><br>Pozdrawiam</div>
         <div id="sig"></div>
       </div>
-      <p class="note" style="margin:16px 0 0"><b>Tryb ciemny</b> przełącza się sam w&nbsp;Apple Mail (Mac, iPhone) i&nbsp;Thunderbirdzie.<br>Gmail i&nbsp;Outlook pokazują wersję jasną i&nbsp;przyciemniają ją po swojemu.</p>
+      <p class="note note--balance" style="margin:16px 0 0"><span><b>Tryb ciemny</b> przełącza się sam w&nbsp;Apple&nbsp;Mail&nbsp;(Mac,&nbsp;iPhone) i&nbsp;Thunderbirdzie.</span><span>Gmail i&nbsp;Outlook pokazują wersję&nbsp;jasną i&nbsp;przyciemniają ją po&nbsp;swojemu.</span></p>
       </div>
     </div>
   </section>
