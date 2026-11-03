@@ -239,12 +239,13 @@ function imgPair(name, w, h, alt) {
        + `<img src="${BASE}obrazki/${name}-dark.png" width="${w}" height="${h}" alt="${alt}" style="${st}"></div><!--<![endif]-->`;
 }
 
-/* Szerokość: atrybut width="600" + style width:600px;max-width:100%.
-   Każdy wariant przetrwa sanityzację edytorów podpisu (Gmail usuwa część stylów):
-   - wszystko zostaje  -> 600 px, na telefonie zwęża się do ekranu,
-   - znika max-width    -> stałe 600 px (klauzula nadal się zawija),
-   - znikają style      -> zostaje atrybut width="600". */
-function signature(p) {
+/* Dwie szerokości stopki:
+   - KOPIOWANA (Gmail, Outlook, iPhone): stałe 288 px. Edytory podpisów wycinają max-width,
+     a stała szerokość mieści się na każdym telefonie (iPhone SE: 320 px minus marginesy aplikacji),
+     więc telefon nie pomniejsza całego maila.
+   - PLIK (Apple Mail, Thunderbird): płynna do 600 px — te programy zachowują style. */
+const COPY_W = 288;
+function signature(p, fixed = false) {
   const txt = `font-family:${SERIF};font-size:12px;line-height:14px;color:${RED};mso-line-height-rule:exactly;`;
   const a = `color:${RED};text-decoration:none;`;
   const tel = 'tel:' + p.phone.replace(/[^\d+]/g, '');
@@ -253,8 +254,10 @@ function signature(p) {
   if (p.email) contact.push(`<a href="mailto:${esc(p.email)}" style="${a}">${esc(p.email)}</a>`);
   contact.push(`<a href="https://${WEB}" style="${a}">${WEB}</a>`);
   const who = [p.name, p.role].filter(Boolean).map(esc).join('<br>');
-  return `<!--[if mso]><table role="presentation" width="600" cellpadding="0" cellspacing="0" border="0"><tr><td><![endif]-->
-<table role="presentation" class="hs-sig" cellpadding="0" cellspacing="0" border="0" width="600" style="width:600px;max-width:100%;border-collapse:collapse;mso-table-lspace:0;mso-table-rspace:0;">
+  const W = fixed ? COPY_W : 600;
+  const size = fixed ? `width="${W}" style="width:${W}px;` : `width="100%" style="width:100%;max-width:600px;`;
+  return `<!--[if mso]><table role="presentation" width="${W}" cellpadding="0" cellspacing="0" border="0"><tr><td><![endif]-->
+<table role="presentation" class="hs-sig" cellpadding="0" cellspacing="0" border="0" ${size}border-collapse:collapse;mso-table-lspace:0;mso-table-rspace:0;">
   <tr><td class="hs-txt" style="${txt}padding:0 0 27px 0;">${who}</td></tr>
   <tr><td style="padding:0 0 27px 0;"><a href="https://${WEB}" style="${a}">${imgPair('logo', 207, 15, 'HAIRISHED')}</a></td></tr>
   <tr><td class="hs-txt" style="${txt}padding:0 0 15px 0;">${contact.join('<br>')}</td></tr>
@@ -317,7 +320,7 @@ function suggestEmail() {
 
 function render() {
   const d = data();
-  $('sig').innerHTML = signature(d);
+  $('sig').innerHTML = signature(d, true);   // podgląd = wersja kopiowana (najczęstsza)
   [...$('presets').children].forEach((b, i) => b.setAttribute('aria-pressed', F.every(k => (PRESETS[i][k] || '') === d[k])));
 }
 
@@ -373,7 +376,7 @@ function check() { const p = data(); if (!p.name) { toast('Wpisz imię i nazwisk
 
 async function copyRich() {
   const p = check(); if (!p) return;
-  const html = signature(p);
+  const html = signature(p, true);
   try {   // nowoczesne API: kopiuje HTML jako sformatowany tekst
     await navigator.clipboard.write([new ClipboardItem({
       'text/html': new Blob([html], { type:'text/html' }),
