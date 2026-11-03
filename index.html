@@ -5,68 +5,87 @@
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <title>HAIRISHED — generator stopek mailowych</title>
 <link rel="icon" href="obrazki/sygnet-light.png">
+<meta name="robots" content="noindex, nofollow">
 <style>
   @font-face { font-family:'DGM Gleff'; src:url('fonty/dgm-gleff-regular.woff2') format('woff2'); }
   @font-face { font-family:'Ufficio Mono'; src:url('fonty/ufficio-mono-400.woff2') format('woff2'); }
 
+  /* Narzędzie robocze: monochromatyczne, jak edytor brandmanuala KHOREI */
   :root {
-    --red:#830010; --ink:#1b1b1b; --mute:#7a7a7a; --line:#e6e3e1; --bg:#f6f4f2; --card:#fff;
-    --mono:'Ufficio Mono', Menlo, monospace; --serif:'DGM Gleff', Georgia, serif;
-    --sans:-apple-system, BlinkMacSystemFont, 'Helvetica Neue', sans-serif;
+    --bg:#f4f4f2; --panel:#ffffff; --fg:#111111; --muted:#77776f; --line:#e2e2dd; --soft:#f0f0ec; --on:#111111; --on-fg:#ffffff;
+    --ui:"ABC Areal Variable", system-ui, -apple-system, "Helvetica Neue", Arial, sans-serif;
+    color-scheme:light;
   }
   * { box-sizing:border-box; }
-  body { margin:0; background:var(--bg); color:var(--ink); font:15px/1.5 var(--sans); }
+  html, body { height:100%; margin:0; }
+  body { background:var(--bg); color:var(--fg); font:500 13px/1.35 var(--ui); -webkit-font-smoothing:antialiased; }
+  button, input { font:inherit; color:inherit; }
+  button { cursor:pointer; }
 
-  header { display:flex; align-items:center; justify-content:space-between; gap:16px; padding:28px 40px; border-bottom:1px solid var(--line); }
-  header .brand { display:flex; align-items:center; gap:18px; }
-  header .brand img { display:block; }
-  header .brand span { font:11px/1 var(--mono); text-transform:uppercase; letter-spacing:.08em; color:var(--mute); }
-  header a { font:11px/1 var(--mono); text-transform:uppercase; letter-spacing:.08em; color:var(--red); text-decoration:none; }
+  .app { height:100vh; display:grid; grid-template-columns:400px minmax(0,1fr); grid-template-rows:52px minmax(0,1fr); grid-template-areas:"top top" "panel preview"; }
+  .top { grid-area:top; display:flex; align-items:center; gap:16px; padding:0 16px; background:var(--panel); border-bottom:1px solid var(--line); }
+  .top__brand { font-weight:700; letter-spacing:.02em; }
+  .top__brand span { font-weight:500; color:var(--muted); margin-left:6px; }
+  .top__status { flex:1; color:var(--muted); }
+  .top__actions { display:flex; gap:8px; }
 
-  main { display:grid; grid-template-columns:380px 1fr; gap:32px; padding:32px 40px 64px; max-width:1400px; margin:0 auto; }
-  @media (max-width:960px) { main { grid-template-columns:1fr; padding:24px 20px 48px; } header { padding:20px; } }
-  @media (max-width:520px) { header .brand span { display:none; } }
+  .btn { display:inline-flex; align-items:center; justify-content:space-between; gap:10px; border:1px solid var(--line); background:var(--panel); border-radius:2px; padding:6px 12px; white-space:nowrap; text-decoration:none; color:var(--fg); }
+  .btn:hover { border-color:var(--fg); }
+  .btn.is--primary { background:var(--on); color:var(--on-fg); border-color:var(--on); }
+  .btn.is--wide { width:100%; padding:10px 12px; }
+  .btn small { color:var(--muted); font-size:12px; }
+  .btn.is--primary small { color:rgba(255,255,255,.6); }
 
-  .label { font:11px/1 var(--mono); text-transform:uppercase; letter-spacing:.08em; color:var(--mute); margin:0 0 10px; }
+  .panel { grid-area:panel; overflow:auto; background:var(--bg); border-right:1px solid var(--line); }
+  .panel__inner { padding:20px; display:grid; gap:14px; grid-template-columns:minmax(0,1fr); }
+  .h { font-size:20px; font-weight:500; margin:0 0 4px; }
 
-  form { display:flex; flex-direction:column; gap:18px; }
-  .presets { display:flex; gap:8px; flex-wrap:wrap; }
-  .chip { font:13px/1 var(--sans); padding:8px 12px; border:1px solid var(--line); border-radius:999px; background:var(--card); cursor:pointer; color:var(--ink); }
-  .chip:hover { border-color:var(--red); color:var(--red); }
-  .field label { display:block; font:11px/1 var(--mono); text-transform:uppercase; letter-spacing:.08em; color:var(--mute); margin-bottom:8px; }
-  .field input { width:100%; font:16px/1.3 var(--sans); padding:12px 14px; border:1px solid var(--line); border-radius:8px; background:var(--card); color:var(--ink); outline:none; transition:border-color .15s; }
-  .field input:focus { border-color:var(--red); }
-  .field .hint { font-size:12px; color:var(--mute); margin-top:6px; }
+  .card { border:1px solid var(--line); background:var(--panel); border-radius:2px; }
+  .card__head { padding:9px 12px; border-bottom:1px solid var(--line); display:flex; justify-content:space-between; gap:8px; }
+  .card__head span { color:var(--muted); }
+  .card__body { padding:12px; display:grid; gap:12px; grid-template-columns:minmax(0,1fr); }
 
-  .actions { display:flex; flex-direction:column; gap:10px; margin-top:8px; padding-top:22px; border-top:1px solid var(--line); }
-  .btn { display:flex; align-items:center; justify-content:space-between; gap:12px; width:100%; font:15px/1.2 var(--sans); padding:14px 16px; border-radius:8px; border:1px solid var(--line); background:var(--card); color:var(--ink); cursor:pointer; text-align:left; }
-  .btn small { font:11px/1.3 var(--mono); text-transform:uppercase; letter-spacing:.06em; color:var(--mute); text-align:right; }
-  .btn:hover { border-color:var(--ink); }
-  .btn.primary { background:var(--red); border-color:var(--red); color:#fff; }
-  .btn.primary small { color:rgba(255,255,255,.7); }
-  .btn.primary:hover { filter:brightness(1.1); }
+  .presets { display:flex; gap:3px; flex-wrap:wrap; }
+  .presets button { border:0; background:var(--soft); padding:5px 8px; border-radius:2px; }
+  .presets button:hover { background:#e6e6e1; }
+  .presets button[aria-pressed=true] { background:var(--on); color:var(--on-fg); }
 
-  .preview { display:flex; flex-direction:column; gap:14px; min-width:0; }
-  .toolbar { display:flex; align-items:center; justify-content:space-between; gap:12px; flex-wrap:wrap; }
-  .seg { display:inline-flex; border:1px solid var(--line); border-radius:999px; padding:3px; background:var(--card); }
-  .seg button { font:12px/1 var(--mono); text-transform:uppercase; letter-spacing:.06em; padding:8px 14px; border:0; border-radius:999px; background:transparent; color:var(--mute); cursor:pointer; }
-  .seg button.on { background:var(--ink); color:#fff; }
+  .f { display:grid; gap:5px; min-width:0; }
+  .f__label { color:var(--muted); }
+  .f__hint { color:var(--muted); font-size:12px; }
+  .f input { width:100%; border:1px solid var(--line); background:var(--panel); border-radius:2px; padding:7px 9px; }
+  .f input:focus { outline:2px solid var(--fg); outline-offset:-1px; }
+  .grid2 { display:grid; grid-template-columns:minmax(0,1fr) minmax(0,1fr); gap:10px; align-items:start; }
+  .actions { display:grid; gap:6px; }
+  .note { color:var(--muted); margin:0; }
+  .note b { color:var(--fg); font-weight:500; }
+  .link { color:var(--muted); text-decoration:underline; text-underline-offset:.15em; }
+  .link:hover { color:var(--fg); }
 
-  .mail { border-radius:14px; border:1px solid var(--line); background:#fff; color:#222; padding:44px 48px; overflow:auto; transition:background .2s, color .2s; }
-  .mail.sim-dark { background:#1e1e1e; color:#eee; border-color:#1e1e1e; }
-  .mail.sim-dark.graphite { background:#383838; border-color:#383838; }
-  .mail .meta { font:13px/1.5 var(--sans); opacity:.55; padding-bottom:18px; margin-bottom:26px; border-bottom:1px solid currentColor; border-bottom-color:rgba(127,127,127,.25); }
-  .mail .body { font:15px/1.55 var(--sans); margin-bottom:30px; }
-  @media (max-width:600px) { .mail { padding:28px 22px; } }
+  .preview { grid-area:preview; display:flex; flex-direction:column; min-width:0; min-height:0; }
+  .preview__bar { display:flex; align-items:center; gap:12px; padding:8px 16px; border-bottom:1px solid var(--line); background:var(--panel); flex-wrap:wrap; }
+  .preview__info { color:var(--muted); margin-left:auto; white-space:nowrap; }
+  .preview__stage { flex:1; overflow:auto; padding:32px; }
+  .mail { max-width:760px; margin:0 auto; background:#fff; color:#222; padding:40px 44px; box-shadow:0 0 0 1px var(--line), 0 8px 24px rgba(0,0,0,.06); transition:background .2s, color .2s; }
+  .mail.sim-dark { background:#1e1e1e; color:#eee; }
+  .mail.sim-dark.graphite { background:#383838; }
+  .mail__meta { font:400 13px/1.5 -apple-system, BlinkMacSystemFont, sans-serif; opacity:.55; padding-bottom:16px; margin-bottom:24px; border-bottom:1px solid rgba(127,127,127,.25); }
+  .mail__body { font:400 15px/1.55 -apple-system, BlinkMacSystemFont, sans-serif; margin-bottom:28px; }
 
-  .note { font-size:13px; color:var(--mute); }
-  .note b { color:var(--ink); font-weight:600; }
+  @media (max-width:900px) {
+    .app { height:auto; min-height:100vh; grid-template-columns:1fr; grid-template-rows:52px auto auto; grid-template-areas:"top" "panel" "preview"; }
+    .panel { border-right:0; border-bottom:1px solid var(--line); overflow:visible; }
+    .preview__stage { padding:16px; }
+    .mail { padding:24px 20px; }
+    .grid2 { grid-template-columns:1fr; }
+    .top__brand span { display:none; }
+  }
 
-  #toast { position:fixed; left:50%; bottom:28px; transform:translate(-50%, 20px); opacity:0; background:var(--ink); color:#fff; font:14px/1.4 var(--sans); padding:12px 18px; border-radius:8px; transition:all .25s; pointer-events:none; max-width:90vw; }
-  #toast.show { opacity:1; transform:translate(-50%, 0); }
+  #toast { position:fixed; left:50%; bottom:24px; transform:translate(-50%,16px); opacity:0; background:var(--on); color:var(--on-fg); padding:9px 14px; border-radius:2px; transition:all .2s; pointer-events:none; max-width:90vw; z-index:20; }
+  #toast.show { opacity:1; transform:translate(-50%,0); }
   #clip { position:fixed; left:-10000px; top:0; background:#fff; }
 
-  /* --- reguły stopki (podgląd) --- */
+  /* --- reguły stopki (podgląd trybu ciemnego) --- */
   .hs-txt a { text-decoration:none !important; }
   .sim-dark .hs-txt, .sim-dark .hs-txt a { color:#ffffff !important; }
   .sim-dark .hs-light { display:none !important; }
@@ -74,51 +93,68 @@
 </style>
 </head>
 <body>
+<div class="app">
+  <header class="top">
+    <div class="top__brand">HAIRISHED<span>stopki mailowe</span></div>
+    <div class="top__status" id="status"></div>
+    <div class="top__actions"><a class="btn" href="instrukcja.html" target="_blank">Instrukcja instalacji</a></div>
+  </header>
 
-<header>
-  <div class="brand">
-    <img src="obrazki/logo-light.png" width="166" height="12" alt="HAIRISHED">
-    <span>Generator stopek</span>
-  </div>
-  <a href="instrukcja.html" target="_blank">Instrukcja instalacji →</a>
-</header>
+  <section class="panel">
+    <div class="panel__inner">
+      <h1 class="h">Stopka pracownika</h1>
 
-<main>
-  <section>
-    <p class="label">Dane pracownika</p>
-    <form id="f" autocomplete="off" onsubmit="return false">
-      <div class="presets" id="presets"></div>
-      <div class="field"><label for="name">Imię i nazwisko</label><input id="name" placeholder="Helena Karaplios"></div>
-      <div class="field"><label for="role">Stanowisko</label><input id="role" placeholder="Founder"></div>
-      <div class="field"><label for="phone">Telefon</label><input id="phone" type="tel" placeholder="+48 662 060 956"><div class="hint">Z kierunkowym, spacje co 3 cyfry.</div></div>
-      <div class="field"><label for="email">E-mail</label><input id="email" type="email" placeholder="helena@hairished.com"><div class="hint">Podpowiada się z imienia — możesz nadpisać.</div></div>
-
-      <div class="actions">
-        <button class="btn primary" type="button" onclick="copyRich()">Kopiuj stopkę <small>Gmail · Outlook · iPhone</small></button>
-        <button class="btn" type="button" onclick="copyAppleMail()">Kopiuj kod <small>Apple Mail</small></button>
-        <button class="btn" type="button" onclick="downloadHtml()">Pobierz plik HTML <small>Thunderbird · Outlook Win</small></button>
-        <button class="btn" type="button" onclick="copyLink()">Kopiuj link dla pracownika <small>z wpisanymi danymi</small></button>
+      <div class="card">
+        <div class="card__head">Gotowe ustawienia</div>
+        <div class="card__body"><div class="presets" id="presets"></div></div>
       </div>
-    </form>
+
+      <form class="card" id="f" autocomplete="off" onsubmit="return false">
+        <div class="card__head">Dane</div>
+        <div class="card__body">
+          <label class="f"><span class="f__label">Imię i nazwisko</span><input id="name" placeholder="Helena Karaplios"></label>
+          <label class="f"><span class="f__label">Stanowisko</span><input id="role" placeholder="Founder"></label>
+          <div class="grid2">
+            <label class="f"><span class="f__label">Telefon</span><input id="phone" type="tel" placeholder="+48 662 060 956"></label>
+            <label class="f"><span class="f__label">E-mail</span><input id="email" type="email" placeholder="helena@hairished.com"></label>
+          </div>
+          <p class="f__hint">E-mail podpowiada się z imienia — możesz go nadpisać.</p>
+        </div>
+      </form>
+
+      <div class="card">
+        <div class="card__head">Eksport<span>wybierz program pocztowy</span></div>
+        <div class="card__body actions">
+          <button class="btn is--primary is--wide" type="button" onclick="copyRich()">Kopiuj stopkę <small>Gmail · Outlook · iPhone</small></button>
+          <button class="btn is--wide" type="button" onclick="copyAppleMail()">Kopiuj kod <small>Apple Mail</small></button>
+          <button class="btn is--wide" type="button" onclick="downloadHtml()">Pobierz plik HTML <small>Thunderbird · Outlook Windows</small></button>
+          <button class="btn is--wide" type="button" onclick="copyLink()">Kopiuj link dla pracownika <small>z wpisanymi danymi</small></button>
+        </div>
+      </div>
+
+      <p class="note">Jak zainstalować stopkę w danym programie — <a class="link" href="instrukcja.html" target="_blank">instrukcja</a>.</p>
+    </div>
   </section>
 
   <section class="preview">
-    <div class="toolbar">
-      <p class="label" style="margin:0">Podgląd</p>
-      <div class="seg" id="mode">
-        <button data-m="light" class="on">Jasny</button>
-        <button data-m="dark">Ciemny</button>
-        <button data-m="graphite">Grafit</button>
+    <div class="preview__bar">
+      <div class="presets" id="mode">
+        <button type="button" data-m="light" aria-pressed="true">Jasny</button>
+        <button type="button" data-m="dark" aria-pressed="false">Ciemny</button>
+        <button type="button" data-m="graphite" aria-pressed="false">Grafit</button>
       </div>
+      <span class="preview__info" id="info">Tryb jasny · 600 px</span>
     </div>
-    <div class="mail" id="mail">
-      <div class="meta">Do: klient@example.com<br>Temat: Materiały</div>
-      <div class="body">Dzień dobry,<br>przesyłam materiały w załączniku.<br><br>Pozdrawiam</div>
-      <div id="sig"></div>
+    <div class="preview__stage">
+      <div class="mail" id="mail">
+        <div class="mail__meta">Do: klient@example.com<br>Temat: Materiały</div>
+        <div class="mail__body">Dzień dobry,<br>przesyłam materiały w załączniku.<br><br>Pozdrawiam</div>
+        <div id="sig"></div>
+      </div>
+      <p class="note" style="max-width:760px;margin:16px auto 0"><b>Tryb ciemny</b> przełącza się sam w Apple Mail (Mac, iPhone) i Thunderbirdzie. Gmail i Outlook pokazują wersję jasną i przyciemniają ją po swojemu.</p>
     </div>
-    <p class="note"><b>Tryb ciemny</b> przełącza się sam w Apple Mail (Mac, iPhone) i Thunderbirdzie. Gmail i Outlook pokazują wersję jasną i przyciemniają ją po swojemu.</p>
   </section>
-</main>
+</div>
 
 <div id="clip" contenteditable="true"></div>
 <div id="toast"></div>
@@ -223,7 +259,11 @@ function suggestEmail() {
   $('email').value = s ? `${s}@${DOMAIN}` : '';
 }
 
-function render() { $('sig').innerHTML = signature(data()); }
+function render() {
+  const d = data();
+  $('sig').innerHTML = signature(d);
+  [...$('presets').children].forEach((b, i) => b.setAttribute('aria-pressed', F.every(k => (PRESETS[i][k] || '') === d[k])));
+}
 
 function fill(p, touched = true) {
   F.forEach(k => $(k).value = p[k] || '');
@@ -231,13 +271,14 @@ function fill(p, touched = true) {
   render();
 }
 
-$('presets').innerHTML = PRESETS.map((p, i) => `<button type="button" class="chip" data-i="${i}">${esc(p.name)}</button>`).join('');
+$('presets').innerHTML = PRESETS.map((p, i) => `<button type="button" data-i="${i}" aria-pressed="false">${esc(p.name)}</button>`).join('');
 $('presets').addEventListener('click', e => { const i = e.target.dataset.i; if (i != null) fill(PRESETS[i]); });
 F.forEach(k => $(k).addEventListener('input', () => { if (k === 'email') emailTouched = $('email').value !== ''; if (k === 'name') suggestEmail(); render(); }));
 
 $('mode').addEventListener('click', e => {
   const m = e.target.dataset.m; if (!m) return;
-  [...$('mode').children].forEach(b => b.classList.toggle('on', b === e.target));
+  [...$('mode').children].forEach(b => b.setAttribute('aria-pressed', b === e.target));
+  $('info').textContent = { light:'Tryb jasny', dark:'Tryb ciemny (symulacja)', graphite:'Tryb ciemny na grafitowym tle' }[m] + ' · 600 px';
   $('mail').classList.toggle('sim-dark', m !== 'light');
   $('mail').classList.toggle('graphite', m === 'graphite');
 });
