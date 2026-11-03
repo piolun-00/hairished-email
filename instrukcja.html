@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="pl"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>HAIRISHED – instalacja stopki mailowej</title>
+<style>
+  :root { --red:#830010; --ink:#1d1d1d; --mute:#6b6b6b; --line:#e4e4e4; }
+  * { box-sizing:border-box; }
+  body { margin:0; font:15px/1.6 -apple-system,BlinkMacSystemFont,'Helvetica Neue',sans-serif; color:var(--ink); background:#fafafa; }
+  main { max-width:820px; margin:0 auto; padding:56px 28px 96px; }
+  h1 { font-size:28px; letter-spacing:-.01em; margin:0 0 8px; }
+  .lead { color:var(--mute); margin:0 0 40px; }
+  h2 { font-size:19px; margin:56px 0 12px; padding-top:24px; border-top:1px solid var(--line); }
+  h2 small { font-weight:400; color:var(--mute); font-size:14px; margin-left:8px; }
+  h3 { font-size:15px; margin:24px 0 6px; }
+  ol, ul { padding-left:22px; } li { margin:6px 0; }
+  code, kbd { font:13px/1.4 Menlo,Consolas,monospace; background:#f0f0f0; border:1px solid var(--line); border-radius:4px; padding:1px 5px; }
+  pre { font:13px/1.5 Menlo,Consolas,monospace; background:#1e1e1e; color:#eee; padding:14px 16px; border-radius:8px; overflow:auto; }
+  .note { background:#fff; border:1px solid var(--line); border-left:3px solid var(--red); padding:12px 16px; border-radius:6px; margin:16px 0; }
+  table { width:100%; border-collapse:collapse; font-size:14px; background:#fff; }
+  th, td { text-align:left; padding:9px 10px; border-bottom:1px solid var(--line); vertical-align:top; }
+  th { font-weight:600; background:#f4f4f4; }
+  .y { color:#2a7a2a; } .p { color:#a06a00; } .n { color:var(--red); }
+  nav a { color:var(--red); margin-right:14px; white-space:nowrap; }
+</style></head>
+<body><main>
+
+<h1>Stopka mailowa HAIRISHED — instalacja</h1>
+<p class="lead">Jedna stopka, która sama zmienia kolory w trybie ciemnym (tam, gdzie klient poczty na to pozwala).</p>
+
+<nav>
+  <a href="#przed">Zanim zaczniesz</a><a href="#apple">Apple Mail (Mac)</a><a href="#ios">iPhone / iPad</a>
+  <a href="#gmail">Gmail</a><a href="#outlook">Outlook</a><a href="#thunderbird">Thunderbird</a><a href="#inne">Inne</a><a href="#tabela">Co gdzie działa</a>
+</nav>
+
+<h2 id="przed">Zanim zaczniesz</h2>
+<p>W folderze są trzy rodzaje plików na osobę:</p>
+<ul>
+  <li><code>podglad-[imie].html</code> — podgląd w trybie jasnym i ciemnym oraz przycisk <b>„Kopiuj stopkę”</b>. Do Gmaila, Outlooka i iPhone’a.</li>
+  <li><code>apple-mail-[imie].txt</code> — gotowy kod do wklejenia w plik podpisu Apple Mail.</li>
+  <li><code>stopka-[imie].html</code> — pełny plik HTML. Do Thunderbirda i klasycznego Outlooka na Windowsie.</li>
+</ul>
+<div class="note"><b>Logo i fonty muszą być już online.</b> Stopka pobiera je z <code>https://piolun-00.github.io/hairished-email/</code>. Zanim zaczniesz instalację, otwórz w przeglądarce <code>https://piolun-00.github.io/hairished-email/obrazki/logo-light.png</code>. Jeśli widzisz logo, wszystko jest gotowe.</div>
+<div class="note">Najwygodniej kopiować z <b>wersji online</b> podglądu: <code>https://piolun-00.github.io/hairished-email/podglad-helena.html</code>. Działa na każdym komputerze i telefonie, bez przesyłania plików.</div>
+
+<h2 id="apple">Apple Mail na Macu <small>pełna wersja: fonty + automatyczny dark mode</small></h2>
+<ol>
+  <li>Otwórz <b>Mail → Ustawienia → Podpisy</b>. Wybierz konto i kliknij <kbd>+</kbd>. Nazwij podpis <b>HAIRISHED</b> i wpisz dowolny tekst, np. „x”.</li>
+  <li><b>Odznacz</b> opcję „Zawsze dopasowuj do domyślnej czcionki wiadomości”, inaczej Mail nadpisze fonty.</li>
+  <li>Zamknij Mail całkowicie: <kbd>Cmd</kbd>+<kbd>Q</kbd>.</li>
+  <li>W Finderze naciśnij <kbd>Shift</kbd>+<kbd>Cmd</kbd>+<kbd>G</kbd> i wklej jedną z dwóch ścieżek:
+    <pre>~/Library/Mobile Documents/com~apple~mail/Data/V10/MailData/Signatures/</pre>
+    (gdy podpisy synchronizują się przez iCloud), a jeśli tam nic nie ma:
+    <pre>~/Library/Mail/V10/MailData/Signatures/</pre>
+    Na nowszym macOS numer może być wyższy (<code>V11</code> itd.), wtedy wejdź w najwyższy.</li>
+  <li>Posortuj pliki według daty i znajdź najnowszy <code>.mailsignature</code>. To ten, który przed chwilą utworzyłeś.</li>
+  <li>Otwórz go w <b>TextEdit</b>. Na górze są linijki nagłówka (<code>Content-Transfer-Encoding</code>, <code>Content-Type</code>, <code>Message-Id</code>, <code>Mime-Version</code>) i pusta linia. <b>Zostaw je</b>, a całą resztę pliku zastąp zawartością <code>apple-mail-[imie].txt</code>.
+    <br><small>Jeśli TextEdit pokazuje sformatowany tekst zamiast kodu, zmień to w TextEdit → Ustawienia → Otwieranie i zapisywanie → „Wyświetlaj pliki HTML jako kod HTML”.</small></li>
+  <li>Zapisz plik, a potem w Finderze kliknij go i naciśnij <kbd>Cmd</kbd>+<kbd>I</kbd> → zaznacz <b>„Zablokowany”</b>. Bez tego Mail przy pierwszym otwarciu przywróci starą wersję.</li>
+  <li>Uruchom Mail i wyślij maila testowego do siebie, najlepiej na skrzynkę Gmail i na iPhone’a w trybie ciemnym.</li>
+</ol>
+<div class="note">W oknie ustawień Mail podgląd podpisu bywa pusty albo bez obrazków. To normalne, w nowej wiadomości stopka wyświetli się poprawnie.</div>
+
+<h2 id="ios">iPhone / iPad (aplikacja Mail)</h2>
+<ol>
+  <li>Na iPhonie otwórz w <b>Safari</b> podgląd online i stuknij <b>„Kopiuj stopkę”</b>.</li>
+  <li>Wejdź w <b>Ustawienia → Aplikacje → Mail → Podpis</b> i wklej.</li>
+  <li>Jeśli formatowanie zniknęło, <b>potrząśnij telefonem</b> i wybierz „Cofnij zmianę atrybutów”. Wtedy wróci wersja z logo i kolorami.</li>
+</ol>
+<div class="note">iOS wycina style, więc na iPhonie wysyłana jest wersja jasna, bez automatycznej zmiany kolorów. Jeśli Mail na Macu i iPhonie korzysta z tego samego konta iCloud, podpis z punktu Apple Mail może zsynchronizować się sam.</div>
+
+<h2 id="gmail">Gmail (przeglądarka)</h2>
+<ol>
+  <li>Otwórz podgląd w Chrome lub Safari i kliknij <b>„Kopiuj stopkę”</b>.</li>
+  <li>W Gmailu kliknij <b>⚙ → Zobacz wszystkie ustawienia → Ogólne → Podpis → Utwórz nowy</b>. Nazwij go „HAIRISHED” i wklej (<kbd>Cmd</kbd>+<kbd>V</kbd>).</li>
+  <li>Niżej, w „Domyślne ustawienia podpisu”, wybierz go dla nowych wiadomości i odpowiedzi.</li>
+  <li>Zjedź na sam dół strony i kliknij <b>Zapisz zmiany</b>.</li>
+</ol>
+<div class="note">Gmail nie obsługuje własnych fontów ani przełączania trybu, więc zamiast DGM Gleff wyświetli się Georgia, a zamiast Ufficio Mono krój systemowy. W ciemnym trybie aplikacji Gmail sam rozjaśnia tekst, a logo zostaje bordowe.</div>
+
+<h2 id="outlook">Outlook</h2>
+<h3>Nowy Outlook (Windows), Outlook.com, Outlook na Macu</h3>
+<ol>
+  <li>Skopiuj stopkę z podglądu.</li>
+  <li><b>Ustawienia → Konta → Podpisy → Nowy podpis</b>, wklej i zapisz. Ustaw go jako domyślny dla nowych wiadomości i odpowiedzi.</li>
+</ol>
+<h3>Klasyczny Outlook na Windowsie</h3>
+<ol>
+  <li><b>Plik → Opcje → Poczta → Podpisy → Nowy</b>, nazwij go „HAIRISHED” i wklej skopiowaną stopkę.</li>
+  <li>Albo inaczej: zamknij Outlooka, wpisz w pasku Eksploratora <code>%APPDATA%\Microsoft\Signatures</code>, wrzuć tam <code>stopka-[imie].html</code> ze zmienioną końcówką na <code>.htm</code> i wybierz ten podpis w ustawieniach.</li>
+</ol>
+<div class="note">Klasyczny Outlook renderuje maile silnikiem Worda. Fonty zastąpi Georgia i Courier New, ale układ zostanie zachowany.</div>
+
+<h2 id="thunderbird">Thunderbird</h2>
+<ol>
+  <li><b>Ustawienia kont</b> → wybierz konto.</li>
+  <li>Zaznacz <b>„Dołącz podpis z pliku”</b> i wskaż <code>stopka-[imie].html</code>.</li>
+  <li>Upewnij się, że konto tworzy wiadomości w HTML: <b>Tworzenie i adresowanie → „Twórz wiadomości w formacie HTML”</b>.</li>
+</ol>
+
+<h2 id="inne">Inne programy (Spark, Proton, Edison…)</h2>
+<p>Szukaj w ustawieniach sekcji „Podpis” i wklej stopkę skopiowaną z podglądu. Jeśli program ma tryb „HTML” albo „Edytuj kod”, możesz tam wkleić zawartość <code>stopka-[imie].html</code>.</p>
+
+<h2 id="tabela">Co gdzie działa</h2>
+<table>
+  <tr><th>Program</th><th>Logo i układ</th><th>Fonty marki</th><th>Auto dark mode</th></tr>
+  <tr><td>Apple Mail (Mac)</td><td class="y">tak</td><td class="y">tak</td><td class="y">tak</td></tr>
+  <tr><td>iPhone / iPad Mail</td><td class="y">tak</td><td class="p">u odbiorcy w Apple Mail tak</td><td class="p">wersja jasna</td></tr>
+  <tr><td>Gmail</td><td class="y">tak</td><td class="n">zamienniki</td><td class="p">Gmail rozjaśnia tekst sam, logo zostaje bordowe</td></tr>
+  <tr><td>Outlook (nowy / web / Mac)</td><td class="y">tak</td><td class="p">zależnie od wersji</td><td class="p">częściowo</td></tr>
+  <tr><td>Outlook klasyczny (Windows)</td><td class="y">tak</td><td class="n">Georgia / Courier New</td><td class="n">nie</td></tr>
+  <tr><td>Thunderbird</td><td class="y">tak</td><td class="y">tak</td><td class="y">tak</td></tr>
+</table>
+<p style="color:var(--mute);font-size:13px;margin-top:12px">Wygląd zależy też od programu <b>odbiorcy</b>: mail wysłany z Apple Mail otwarty w Gmailu będzie wyglądał tak jak w wierszu „Gmail”.</p>
+
+</main></body></html>
