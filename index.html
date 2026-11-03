@@ -157,7 +157,6 @@
   <section class="panel">
     <div class="panel__inner">
       <h1 class="h">Stopka pracownika</h1>
-      <div class="card" id="testbar" hidden style="border-color:#9a5b00"><div class="card__body"><p class="note" style="color:#9a5b00"><b style="color:#9a5b00">Tryb testowy telefonu.</b> Stopka zawiera 5&nbsp;wariantów numeru (A–E). Kliknij „Kopiuj dla Gmaila”, wklej do <b>treści nowej wiadomości</b> w&nbsp;Gmailu (nie do podpisu), wyślij do siebie i&nbsp;stuknij każdy wariant na iPhonie.</p></div></div>
 
       <div class="card">
         <div class="card__head">Gotowe ustawienia</div>
@@ -260,8 +259,6 @@ const DISCLAIMER_RAW = "©2026 HAIRISHED®. WSZELKIE PRAWA ZASTRZEŻONE. TREŚĆ
 // twarde spacje po jednoliterowych słowach (Z, I, W, A…) i przed myślnikiem — typografia klauzuli
 const DISCLAIMER = DISCLAIMER_RAW.replace(/(^|\s)([AIOUWZ])\s/g, '$1$2\u00a0').replace(/(^|\s)([AIOUWZ])\s/g, '$1$2\u00a0').replace(/\s—/g, '\u00a0—');
 
-const TEST_TEL = new URLSearchParams(location.search).get('test') === 'tel';
-
 const PRESETS = [
   { name:'Helena Karaplios',  role:'Founder', phone:'+48 662 060 956', email:'helena@hairished.com' },
   { name:'Stathis Karaplios', role:'Founder', phone:'+48 602 500 401', email:'stathis@hairished.com' },
@@ -288,18 +285,10 @@ const COPY_W = 288;
 function signature(p, fixed = false) {
   const txt = `font-family:${SERIF};font-size:12px;line-height:14px;color:${RED};mso-line-height-rule:exactly;`;
   const a = `color:${RED};text-decoration:none;`;
-  const tel = 'tel:' + p.phone.replace(/[^\d+]/g, '');
   const contact = [];
-  if (p.phone) contact.push(`<a href="${esc(tel)}" style="${a}">${esc(p.phone)}</a>`);
-  if (p.phone && TEST_TEL) {   // tryb diagnostyczny: ?test=tel — warianty numeru do sprawdzenia na iPhonie
-    const digits = tel.slice(4), zw = esc(p.phone).replace(/ /g, '&#8203; ');
-    contact.push(
-      `A: <a href="${esc(tel)}" style="${a}">${esc(p.phone)}</a>`,
-      `B: ${esc(p.phone)}`,
-      `C: <a href="${esc(tel)}" style="${a}">${zw}</a>`,
-      `D: <a href="tel:00${esc(digits.replace('+', ''))}" style="${a}">${esc(p.phone)}</a>`,
-      `E: <a href="${esc(tel)}" style="${a}">Zadzwoń</a>`);
-  }
+  // Telefon jako zwykły tekst: iOS Mail ignoruje linki tel: z Gmaila, a dzwoni tylko z numeru,
+  // który sam wykryje (test 03.11). Mac, Android i aplikacja Gmail też wykrywają numery same.
+  if (p.phone) contact.push(esc(p.phone));
   if (p.email) contact.push(`<a href="mailto:${esc(p.email)}" style="${a}">${esc(p.email)}</a>`);
   contact.push(`<a href="https://${WEB}" style="${a}">${WEB}</a>`);
   const who = [p.name, p.role].filter(Boolean).map(esc).join('<br>');
@@ -329,7 +318,7 @@ function styleBlock() {
     src:url('${BASE}fonty/ufficio-mono-400.woff2') format('woff2'), url('${BASE}fonty/ufficio-mono-400.woff') format('woff'); }
 }
 .hs-txt a { text-decoration:none !important; }
-a[x-apple-data-detectors] { color:inherit !important; text-decoration:none !important; }
+a[x-apple-data-detectors] { color:inherit !important; text-decoration:none !important; font-size:inherit !important; font-family:inherit !important; font-weight:inherit !important; line-height:inherit !important; }
 @media (prefers-color-scheme: dark) {${dark}
 }
 [data-ogsc] .hs-txt, [data-ogsc] .hs-txt a { color:${WHITE} !important; }
@@ -555,8 +544,6 @@ function copyLink() {
   F.forEach(k => p[k] && u.searchParams.set(k, p[k]));
   copyText(u.href, 'Link skopiowany.'); showGuide('link');
 }
-
-if (TEST_TEL) $('testbar').hidden = false;
 
 /* start: dane z linku albo pierwszy preset */
 const q = new URLSearchParams(location.search);
