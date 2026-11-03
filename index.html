@@ -153,7 +153,8 @@
       <div class="card">
         <div class="card__head">Eksport<span>wybierz program pocztowy</span></div>
         <div class="card__body actions">
-          <button class="btn is--primary is--wide" type="button" onclick="copyRich()">Kopiuj stopkę <small>Gmail · Outlook · iPhone</small></button>
+          <button class="btn is--primary is--wide" type="button" onclick="copyRich(true)">Kopiuj dla Gmaila <small>stała kolumna</small></button>
+          <button class="btn is--wide" type="button" onclick="copyRich(false)">Kopiuj dla Outlooka i&nbsp;iPhone’a <small>płynna</small></button>
           <button class="btn is--wide" type="button" onclick="copyAppleMail()">Kopiuj kod <small>Apple&nbsp;Mail</small></button>
           <button class="btn is--wide" type="button" onclick="downloadHtml()">Pobierz plik HTML <small>Thunderbird · Outlook Windows</small></button>
           <button class="btn is--wide" type="button" onclick="copyLink()">Kopiuj link dla pracownika <small>z&nbsp;wpisanymi danymi</small></button>
@@ -178,6 +179,11 @@
       <div class="presets" id="mode">
         <button type="button" data-m="light" aria-pressed="true">Jasny</button>
         <button type="button" data-m="dark" aria-pressed="false">Ciemny</button>
+      </div>
+      <span class="sep"></span>
+      <div class="presets" id="variant">
+        <button type="button" data-v="fluid" aria-pressed="true" title="Apple Mail, Thunderbird, Outlook, iPhone — zawija się do 600 px">Płynna</button>
+        <button type="button" data-v="gmail" aria-pressed="false" title="Gmail — stała kolumna, bo Gmail wycina maksymalną szerokość">Gmail</button>
       </div>
       <span class="sep"></span>
       <div class="presets" id="width">
@@ -240,10 +246,10 @@ function imgPair(name, w, h, alt) {
 }
 
 /* Dwie szerokości stopki:
-   - KOPIOWANA (Gmail, Outlook, iPhone): stałe 288 px. Edytory podpisów wycinają max-width,
+   - GMAIL: stałe 288 px. Edytory podpisów wycinają max-width,
      a stała szerokość mieści się na każdym telefonie (iPhone SE: 320 px minus marginesy aplikacji),
      więc telefon nie pomniejsza całego maila.
-   - PLIK (Apple Mail, Thunderbird): płynna do 600 px — te programy zachowują style. */
+   - PŁYNNA (Apple Mail, Thunderbird, Outlook, iPhone): do 600 px, zwęża się na telefonie. */
 const COPY_W = 288;
 function signature(p, fixed = false) {
   const txt = `font-family:${SERIF};font-size:12px;line-height:14px;color:${RED};mso-line-height-rule:exactly;`;
@@ -320,7 +326,7 @@ function suggestEmail() {
 
 function render() {
   const d = data();
-  $('sig').innerHTML = signature(d, true);   // podgląd = wersja kopiowana (najczęstsza)
+  $('sig').innerHTML = signature(d, variant === 'gmail');   // domyślnie wersja płynna
   [...$('presets').children].forEach((b, i) => b.setAttribute('aria-pressed', F.every(k => (PRESETS[i][k] || '') === d[k])));
 }
 
@@ -337,7 +343,7 @@ F.forEach(k => $(k).addEventListener('input', () => { if (k === 'email') emailTo
 /* Podgląd: tryb i szerokość ekranu */
 const DEVICES = { 320:'iPhone SE', 375:'iPhone mini', 390:'iPhone', 430:'iPhone Pro Max', 600:'tablet / wąskie okno poczty', 760:'okno poczty na komputerze' };
 const MIN_W = 300, MAX_W = 1000;
-let mode = 'light', width = 760;
+let mode = 'light', width = 760, variant = 'fluid';
 
 function updatePreview() {
   $('mail').classList.toggle('sim-dark', mode === 'dark');
@@ -345,12 +351,14 @@ function updatePreview() {
   $('frame').classList.toggle('is--phone', width <= 480);
   $('rw').textContent = width + ' px';
   [...$('mode').children].forEach(b => b.setAttribute('aria-pressed', b.dataset.m === mode));
+  [...$('variant').children].forEach(b => b.setAttribute('aria-pressed', b.dataset.v === variant));
   [...$('width').children].forEach(b => b.setAttribute('aria-pressed', +b.dataset.w === width));
   const dev = DEVICES[width] || (width <= 480 ? 'telefon' : width <= 700 ? 'tablet / wąskie okno poczty' : 'okno poczty na komputerze');
-  $('info').textContent = `${width} px · ${dev} · ${mode === 'dark' ? 'tryb ciemny (symulacja)' : 'tryb jasny'}`;
+  $('info').textContent = `${width} px · ${dev} · ${variant === 'gmail' ? 'wersja Gmail' : 'wersja płynna'} · ${mode === 'dark' ? 'tryb ciemny' : 'tryb jasny'}`;
 }
 
 $('mode').addEventListener('click', e => { if (e.target.dataset.m) { mode = e.target.dataset.m; updatePreview(); } });
+$('variant').addEventListener('click', e => { if (e.target.dataset.v) { variant = e.target.dataset.v; render(); updatePreview(); } });
 $('width').addEventListener('click', e => { if (e.target.dataset.w) { width = +e.target.dataset.w; updatePreview(); } });
 
 /* przeciąganie pastylki: ramka jest wyśrodkowana, więc ruch o 1 px zmienia szerokość o 2 px */
@@ -374,9 +382,9 @@ updatePreview();
 function toast(msg) { const t = $('toast'); t.textContent = msg; t.classList.add('show'); clearTimeout(t._h); t._h = setTimeout(() => t.classList.remove('show'), 3200); }
 function check() { const p = data(); if (!p.name) { toast('Wpisz imię i nazwisko.'); $('name').focus(); return null; } return p; }
 
-async function copyRich() {
+async function copyRich(fixed) {
   const p = check(); if (!p) return;
-  const html = signature(p, true);
+  const html = signature(p, fixed);
   try {   // nowoczesne API: kopiuje HTML jako sformatowany tekst
     await navigator.clipboard.write([new ClipboardItem({
       'text/html': new Blob([html], { type:'text/html' }),
