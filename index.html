@@ -72,16 +72,32 @@
   .preview__bar { display:flex; align-items:center; gap:12px; padding:8px 16px; border-bottom:1px solid var(--line); background:var(--panel); flex-wrap:wrap; }
   .preview__info { color:var(--muted); margin-left:auto; white-space:nowrap; }
   .preview__stage { flex:1; overflow:auto; padding:32px; }
-  .mail { max-width:760px; margin:0 auto; background:#fff; color:#222; padding:40px 44px; box-shadow:0 0 0 1px var(--line), 0 8px 24px rgba(0,0,0,.06); transition:background .2s, color .2s; }
+  .preview__bar .sep { width:1px; height:20px; background:var(--line); }
+  .preview__bar input[type=range] { flex:1; min-width:120px; max-width:260px; accent-color:var(--fg); }
+  .preview__bar #width button { font-variant-numeric:tabular-nums; }
+  .frame { width:760px; max-width:100%; margin:0 auto; transition:width .2s ease; }
+  .ruler { position:relative; height:22px; margin-bottom:8px; color:var(--muted); font-size:11px; font-variant-numeric:tabular-nums;
+    background:
+      repeating-linear-gradient(to right, #b9b9b2 0 1px, transparent 1px 50px) left bottom / 100% 9px no-repeat,
+      repeating-linear-gradient(to right, #d6d6d0 0 1px, transparent 1px 10px) left bottom / 100% 4px no-repeat;
+    border-bottom:1px solid #b9b9b2; }
+  .ruler span { position:absolute; top:0; }
+  .ruler .r0 { left:0; } .ruler .rw { right:0; }
+  .mail { margin:0; background:#fff; color:#222; padding:40px 44px; box-shadow:0 0 0 1px var(--line), 0 8px 24px rgba(0,0,0,.06); transition:background .2s, color .2s; }
   .mail.sim-dark { background:#1e1e1e; color:#eee; }
   .mail__meta { font:400 13px/1.5 -apple-system, BlinkMacSystemFont, sans-serif; opacity:.55; padding-bottom:16px; margin-bottom:24px; border-bottom:1px solid rgba(127,127,127,.25); }
   .mail__body { font:400 15px/1.55 -apple-system, BlinkMacSystemFont, sans-serif; margin-bottom:28px; }
+  /* Telefon: aplikacje pocztowe zostawiają ok. 16 px marginesu */
+  .frame.is--phone .mail { padding:20px 16px; }
+  .frame.is--phone .mail__meta { font-size:12px; margin-bottom:18px; padding-bottom:12px; }
+  .frame.is--phone .mail__body { font-size:16px; margin-bottom:22px; }
 
   @media (max-width:900px) {
     .app { height:auto; min-height:100vh; grid-template-columns:1fr; grid-template-rows:52px auto auto; grid-template-areas:"top" "panel" "preview"; }
     .panel { border-right:0; border-bottom:1px solid var(--line); overflow:visible; }
     .preview__stage { padding:16px; }
     .mail { padding:24px 20px; }
+    .preview__bar input[type=range] { display:none; }
     .grid2 { grid-template-columns:1fr; }
     .top__brand span { display:none; }
   }
@@ -156,15 +172,28 @@
         <button type="button" data-m="light" aria-pressed="true">Jasny</button>
         <button type="button" data-m="dark" aria-pressed="false">Ciemny</button>
       </div>
-      <span class="preview__info" id="info">Tryb jasny · 600&nbsp;px</span>
+      <span class="sep"></span>
+      <div class="presets" id="width">
+        <button type="button" data-w="320" aria-pressed="false">320</button>
+        <button type="button" data-w="375" aria-pressed="false">375</button>
+        <button type="button" data-w="390" aria-pressed="false">390</button>
+        <button type="button" data-w="430" aria-pressed="false">430</button>
+        <button type="button" data-w="600" aria-pressed="false">600</button>
+        <button type="button" data-w="760" aria-pressed="true">Pełna</button>
+      </div>
+      <input type="range" id="wr" min="300" max="900" step="1" value="760" aria-label="Szerokość podglądu">
+      <span class="preview__info" id="info"></span>
     </div>
     <div class="preview__stage">
+      <div class="frame" id="frame">
+      <div class="ruler"><span class="r0">0</span><span class="rw" id="rw">760 px</span></div>
       <div class="mail" id="mail">
         <div class="mail__meta">Do: klient@example.com<br>Temat: Materiały</div>
         <div class="mail__body">Dzień dobry,<br>przesyłam materiały w&nbsp;załączniku.<br><br>Pozdrawiam</div>
         <div id="sig"></div>
       </div>
-      <p class="note" style="max-width:760px;margin:16px auto 0"><b>Tryb ciemny</b> przełącza się sam w&nbsp;Apple Mail (Mac, iPhone) i&nbsp;Thunderbirdzie.<br>Gmail i&nbsp;Outlook pokazują wersję jasną i&nbsp;przyciemniają ją po swojemu.</p>
+      <p class="note" style="margin:16px 0 0"><b>Tryb ciemny</b> przełącza się sam w&nbsp;Apple Mail (Mac, iPhone) i&nbsp;Thunderbirdzie.<br>Gmail i&nbsp;Outlook pokazują wersję jasną i&nbsp;przyciemniają ją po swojemu.</p>
+      </div>
     </div>
   </section>
 </div>
@@ -290,12 +319,26 @@ $('presets').innerHTML = PRESETS.map((p, i) => `<button type="button" data-i="${
 $('presets').addEventListener('click', e => { const i = e.target.dataset.i; if (i != null) fill(PRESETS[i]); });
 F.forEach(k => $(k).addEventListener('input', () => { if (k === 'email') emailTouched = $('email').value !== ''; if (k === 'name') suggestEmail(); render(); }));
 
-$('mode').addEventListener('click', e => {
-  const m = e.target.dataset.m; if (!m) return;
-  [...$('mode').children].forEach(b => b.setAttribute('aria-pressed', b === e.target));
-  $('info').textContent = { light:'Tryb jasny', dark:'Tryb ciemny (symulacja)' }[m] + ' · 600 px';
-  $('mail').classList.toggle('sim-dark', m !== 'light');
-});
+/* Podgląd: tryb i szerokość ekranu */
+const DEVICES = { 320:'iPhone SE', 375:'iPhone mini', 390:'iPhone', 430:'iPhone Pro Max', 600:'okno maila', 760:'komputer' };
+let mode = 'light', width = 760;
+
+function updatePreview() {
+  $('mail').classList.toggle('sim-dark', mode === 'dark');
+  $('frame').style.width = width + 'px';
+  $('frame').classList.toggle('is--phone', width <= 480);
+  $('wr').value = width;
+  $('rw').textContent = width + ' px';
+  [...$('mode').children].forEach(b => b.setAttribute('aria-pressed', b.dataset.m === mode));
+  [...$('width').children].forEach(b => b.setAttribute('aria-pressed', +b.dataset.w === width));
+  const dev = DEVICES[width] || (width <= 480 ? 'telefon' : width <= 700 ? 'tablet / okno maila' : 'komputer');
+  $('info').textContent = `${width} px · ${dev} · ${mode === 'dark' ? 'tryb ciemny (symulacja)' : 'tryb jasny'}`;
+}
+
+$('mode').addEventListener('click', e => { if (e.target.dataset.m) { mode = e.target.dataset.m; updatePreview(); } });
+$('width').addEventListener('click', e => { if (e.target.dataset.w) { width = +e.target.dataset.w; updatePreview(); } });
+$('wr').addEventListener('input', e => { width = +e.target.value; updatePreview(); });
+updatePreview();
 
 /* ==========================================================
    AKCJE
