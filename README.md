@@ -1,8 +1,8 @@
-# HAIRISHED – stopki mailowe
+# HAIRISHED – generator stopek mailowych
 
-Hosting obrazków i fontów do stopek (GitHub Pages): https://piolun-00.github.io/hairished-email/
+**Aplikacja:** https://piolun-00.github.io/hairished-email/
+**Instrukcja instalacji:** https://piolun-00.github.io/hairished-email/instrukcja.html
 
-- `obrazki/` – logo i sygnet (PNG @3x, wersja jasna i ciemna) – **nie zmieniaj nazw plików**, stopki linkują do nich bezpośrednio
-- `fonty/` – webfonty (woff2/woff), licencja po stronie klienta
-- `podglad-*.html` – podgląd + kopiowanie stopki, `instrukcja.html` – instalacja
-- `_generator.py` – generuje stopki z jednego szablonu (`python3 _generator.py .`)
+- `index.html` – generator: dane pracownika → podgląd (jasny/ciemny) → kopiuj / pobierz / link dla pracownika. Konfiguracja marki (kolory, klauzula, gotowe ustawienia osób) na górze skryptu.
+- `obrazki/` – logo i sygnet (PNG @3x, wersja jasna i ciemna) – **nie zmieniaj nazw plików**, wysłane stopki linkują do nich bezpośrednio
+- `fonty/` – webfonty DGM Gleff i Ufficio Mono (woff2/woff), licencja po stronie klienta

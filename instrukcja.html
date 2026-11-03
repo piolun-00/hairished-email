@@ -25,7 +25,7 @@
 <body><main>
 
 <h1>Stopka mailowa HAIRISHED — instalacja</h1>
-<p class="lead">Jedna stopka, która sama zmienia kolory w trybie ciemnym (tam, gdzie klient poczty na to pozwala).</p>
+<p class="lead"><a href="./" style="color:var(--red)">← Generator</a><br>Jedna stopka, która sama zmienia kolory w trybie ciemnym (tam, gdzie klient poczty na to pozwala).</p>
 
 <nav>
   <a href="#przed">Zanim zaczniesz</a><a href="#apple">Apple Mail (Mac)</a><a href="#ios">iPhone / iPad</a>
@@ -33,14 +33,14 @@
 </nav>
 
 <h2 id="przed">Zanim zaczniesz</h2>
-<p>W folderze są trzy rodzaje plików na osobę:</p>
+<p>Stopkę tworzysz w <a href="./" style="color:var(--red)"><b>generatorze</b></a>: wpisz dane pracownika (albo kliknij gotowe ustawienie) i użyj jednego z przycisków:</p>
 <ul>
-  <li><code>podglad-[imie].html</code> — podgląd w trybie jasnym i ciemnym oraz przycisk <b>„Kopiuj stopkę”</b>. Do Gmaila, Outlooka i iPhone’a.</li>
-  <li><code>apple-mail-[imie].txt</code> — gotowy kod do wklejenia w plik podpisu Apple Mail.</li>
-  <li><code>stopka-[imie].html</code> — pełny plik HTML. Do Thunderbirda i klasycznego Outlooka na Windowsie.</li>
+  <li><b>Kopiuj stopkę</b>: do Gmaila, Outlooka i iPhone’a.</li>
+  <li><b>Kopiuj kod (Apple Mail)</b>: kod do wklejenia w plik podpisu Apple Mail.</li>
+  <li><b>Pobierz plik HTML</b>: do Thunderbirda i klasycznego Outlooka na Windowsie.</li>
+  <li><b>Kopiuj link dla pracownika</b>: link z wpisanymi danymi. Pracownik otwiera go u siebie i sam kopiuje stopkę.</li>
 </ul>
-<div class="note"><b>Logo i fonty muszą być już online.</b> Stopka pobiera je z <code>https://piolun-00.github.io/hairished-email/</code>. Zanim zaczniesz instalację, otwórz w przeglądarce <code>https://piolun-00.github.io/hairished-email/obrazki/logo-light.png</code>. Jeśli widzisz logo, wszystko jest gotowe.</div>
-<div class="note">Najwygodniej kopiować z <b>wersji online</b> podglądu: <code>https://piolun-00.github.io/hairished-email/podglad-helena.html</code>. Działa na każdym komputerze i telefonie, bez przesyłania plików.</div>
+<div class="note">Logo i fonty są pobierane z <code>https://piolun-00.github.io/hairished-email/</code>. <b>Nie zmieniaj nazw plików ani nie usuwaj repozytorium</b>, bo wtedy logo zniknie z wysłanych maili.</div>
 
 <h2 id="apple">Apple Mail na Macu <small>pełna wersja: fonty + automatyczny dark mode</small></h2>
 <ol>
@@ -53,7 +53,7 @@
     <pre>~/Library/Mail/V10/MailData/Signatures/</pre>
     Na nowszym macOS numer może być wyższy (<code>V11</code> itd.), wtedy wejdź w najwyższy.</li>
   <li>Posortuj pliki według daty i znajdź najnowszy <code>.mailsignature</code>. To ten, który przed chwilą utworzyłeś.</li>
-  <li>Otwórz go w <b>TextEdit</b>. Na górze są linijki nagłówka (<code>Content-Transfer-Encoding</code>, <code>Content-Type</code>, <code>Message-Id</code>, <code>Mime-Version</code>) i pusta linia. <b>Zostaw je</b>, a całą resztę pliku zastąp zawartością <code>apple-mail-[imie].txt</code>.
+  <li>Otwórz go w <b>TextEdit</b>. Na górze są linijki nagłówka (<code>Content-Transfer-Encoding</code>, <code>Content-Type</code>, <code>Message-Id</code>, <code>Mime-Version</code>) i pusta linia. <b>Zostaw je</b>, a całą resztę pliku zastąp kodem z przycisku <b>„Kopiuj kod (Apple Mail)”</b>.
     <br><small>Jeśli TextEdit pokazuje sformatowany tekst zamiast kodu, zmień to w TextEdit → Ustawienia → Otwieranie i zapisywanie → „Wyświetlaj pliki HTML jako kod HTML”.</small></li>
   <li>Zapisz plik, a potem w Finderze kliknij go i naciśnij <kbd>Cmd</kbd>+<kbd>I</kbd> → zaznacz <b>„Zablokowany”</b>. Bez tego Mail przy pierwszym otwarciu przywróci starą wersję.</li>
   <li>Uruchom Mail i wyślij maila testowego do siebie, najlepiej na skrzynkę Gmail i na iPhone’a w trybie ciemnym.</li>
@@ -62,7 +62,7 @@
 
 <h2 id="ios">iPhone / iPad (aplikacja Mail)</h2>
 <ol>
-  <li>Na iPhonie otwórz w <b>Safari</b> podgląd online i stuknij <b>„Kopiuj stopkę”</b>.</li>
+  <li>Na iPhonie otwórz generator w <b>Safari</b> (albo link od szefa) i stuknij <b>„Kopiuj stopkę”</b>.</li>
   <li>Wejdź w <b>Ustawienia → Aplikacje → Mail → Podpis</b> i wklej.</li>
   <li>Jeśli formatowanie zniknęło, <b>potrząśnij telefonem</b> i wybierz „Cofnij zmianę atrybutów”. Wtedy wróci wersja z logo i kolorami.</li>
 </ol>
@@ -70,7 +70,7 @@
 
 <h2 id="gmail">Gmail (przeglądarka)</h2>
 <ol>
-  <li>Otwórz podgląd w Chrome lub Safari i kliknij <b>„Kopiuj stopkę”</b>.</li>
+  <li>W generatorze kliknij <b>„Kopiuj stopkę”</b>.</li>
   <li>W Gmailu kliknij <b>⚙ → Zobacz wszystkie ustawienia → Ogólne → Podpis → Utwórz nowy</b>. Nazwij go „HAIRISHED” i wklej (<kbd>Cmd</kbd>+<kbd>V</kbd>).</li>
   <li>Niżej, w „Domyślne ustawienia podpisu”, wybierz go dla nowych wiadomości i odpowiedzi.</li>
   <li>Zjedź na sam dół strony i kliknij <b>Zapisz zmiany</b>.</li>
@@ -80,25 +80,25 @@
 <h2 id="outlook">Outlook</h2>
 <h3>Nowy Outlook (Windows), Outlook.com, Outlook na Macu</h3>
 <ol>
-  <li>Skopiuj stopkę z podglądu.</li>
+  <li>W generatorze kliknij <b>„Kopiuj stopkę”</b>.</li>
   <li><b>Ustawienia → Konta → Podpisy → Nowy podpis</b>, wklej i zapisz. Ustaw go jako domyślny dla nowych wiadomości i odpowiedzi.</li>
 </ol>
 <h3>Klasyczny Outlook na Windowsie</h3>
 <ol>
   <li><b>Plik → Opcje → Poczta → Podpisy → Nowy</b>, nazwij go „HAIRISHED” i wklej skopiowaną stopkę.</li>
-  <li>Albo inaczej: zamknij Outlooka, wpisz w pasku Eksploratora <code>%APPDATA%\Microsoft\Signatures</code>, wrzuć tam <code>stopka-[imie].html</code> ze zmienioną końcówką na <code>.htm</code> i wybierz ten podpis w ustawieniach.</li>
+  <li>Albo inaczej: zamknij Outlooka, wpisz w pasku Eksploratora <code>%APPDATA%\Microsoft\Signatures</code>, wrzuć tam plik z przycisku <b>„Pobierz plik HTML”</b> ze zmienioną końcówką na <code>.htm</code> i wybierz ten podpis w ustawieniach.</li>
 </ol>
 <div class="note">Klasyczny Outlook renderuje maile silnikiem Worda. Fonty zastąpi Georgia i Courier New, ale układ zostanie zachowany.</div>
 
 <h2 id="thunderbird">Thunderbird</h2>
 <ol>
   <li><b>Ustawienia kont</b> → wybierz konto.</li>
-  <li>Zaznacz <b>„Dołącz podpis z pliku”</b> i wskaż <code>stopka-[imie].html</code>.</li>
+  <li>Zaznacz <b>„Dołącz podpis z pliku”</b> i wskaż plik z przycisku <b>„Pobierz plik HTML”</b>.</li>
   <li>Upewnij się, że konto tworzy wiadomości w HTML: <b>Tworzenie i adresowanie → „Twórz wiadomości w formacie HTML”</b>.</li>
 </ol>
 
 <h2 id="inne">Inne programy (Spark, Proton, Edison…)</h2>
-<p>Szukaj w ustawieniach sekcji „Podpis” i wklej stopkę skopiowaną z podglądu. Jeśli program ma tryb „HTML” albo „Edytuj kod”, możesz tam wkleić zawartość <code>stopka-[imie].html</code>.</p>
+<p>Szukaj w ustawieniach sekcji „Podpis” i wklej stopkę skopiowaną z generatora. Jeśli program ma tryb „HTML” albo „Edytuj kod”, wklej tam zawartość pobranego pliku HTML.</p>
 
 <h2 id="tabela">Co gdzie działa</h2>
 <table>
