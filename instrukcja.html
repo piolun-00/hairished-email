@@ -28,7 +28,7 @@
 <p class="lead"><a href="./" style="color:var(--red)">← Generator</a><br>Jedna stopka, która sama zmienia kolory w trybie ciemnym (tam, gdzie klient poczty na to pozwala).</p>
 
 <nav>
-  <a href="#przed">Zanim zaczniesz</a><a href="#apple">Apple Mail (Mac)</a><a href="#ios">iPhone / iPad</a>
+  <a href="#przed">Zanim zaczniesz</a><a href="#fonty">Fonty marki</a><a href="#apple">Apple Mail (Mac)</a><a href="#ios">iPhone / iPad</a>
   <a href="#gmail">Gmail</a><a href="#outlook">Outlook</a><a href="#thunderbird">Thunderbird</a><a href="#inne">Inne</a><a href="#tabela">Co gdzie działa</a>
 </nav>
 
@@ -41,6 +41,25 @@
   <li><b>Kopiuj link dla pracownika</b>: link z wpisanymi danymi. Pracownik otwiera go u siebie i sam kopiuje stopkę.</li>
 </ul>
 <div class="note">Logo i fonty są pobierane z <code>https://piolun-00.github.io/hairished-email/</code>. <b>Nie zmieniaj nazw plików ani nie usuwaj repozytorium</b>, bo wtedy logo zniknie z wysłanych maili.</div>
+
+<h2 id="fonty">Fonty marki — gdzie je widać, a gdzie nie</h2>
+<p>Stopka używa krojów marki: <b>DGM Gleff</b> (imię, kontakt) i <b>Ufficio Mono</b> (klauzula). Programy pocztowe pobierają je z internetu, ale nie każdy na to pozwala. Fonty marki wyświetlą się tylko wtedy, gdy spełnione są <b>oba warunki</b>:</p>
+<ol>
+  <li><b>Nadawca</b> zainstalował stopkę w programie, który zachowuje jej kod stylów: <b>Apple Mail na Macu</b> (przez plik podpisu) albo <b>Thunderbird</b> (z pliku HTML). Gmail, Outlook i iPhone usuwają ten kod przy wklejaniu, więc z nich stopka zawsze wychodzi krojami zastępczymi.</li>
+  <li><b>Odbiorca</b> czyta maila w programie obsługującym własne fonty.</li>
+</ol>
+<table>
+  <tr><th>Program odbiorcy</th><th>Fonty marki</th></tr>
+  <tr><td>Apple Mail — Mac, iPhone, iPad</td><td class="y">tak</td></tr>
+  <tr><td>Outlook na Macu</td><td class="y">tak</td></tr>
+  <tr><td>Thunderbird</td><td class="y">tak</td></tr>
+  <tr><td>Samsung Email (Android)</td><td class="y">tak</td></tr>
+  <tr><td>Gmail — przeglądarka, Android, iPhone</td><td class="n">nie — kroje zastępcze</td></tr>
+  <tr><td>Outlook na Windowsie (klasyczny i nowy), Outlook.com</td><td class="n">nie — kroje zastępcze</td></tr>
+  <tr><td>Yahoo, poczty portali (WP, Onet, Interia)</td><td class="n">nie — kroje zastępcze</td></tr>
+</table>
+<p><b>Kroje zastępcze</b> dobrane są tak, żeby zachować charakter stopki: zamiast DGM Gleff wyświetla się <b>Georgia</b> (szeryfowa, dostępna na każdym systemie), a zamiast Ufficio Mono krój monospace systemu: <b>Menlo</b> na Macu, <b>Consolas</b> albo <b>Courier New</b> na Windowsie. Układ, kolory, logo i sygnet są wszędzie takie same, bo logo i sygnet to obrazki, a nie tekst.</p>
+<div class="note"><b>Licencja:</b> serwowanie fontów w stopce wymaga licencji <b>webowej</b> na DGM Gleff i Ufficio Mono, obejmującej domenę <code>piolun-00.github.io</code> i użycie w e-mailach. Szczegóły w pliku <a href="https://github.com/piolun-00/hairished-email/blob/main/LICENSE" style="color:var(--ink)">LICENSE</a>.</div>
 
 <h2 id="apple">Apple Mail na Macu <small>pełna wersja: fonty + automatyczny dark mode</small></h2>
 <ol>
@@ -102,14 +121,15 @@
 
 <h2 id="tabela">Co gdzie działa</h2>
 <table>
-  <tr><th>Program</th><th>Logo i układ</th><th>Fonty marki</th><th>Auto dark mode</th></tr>
+  <tr><th>Program nadawcy</th><th>Logo i układ</th><th>Fonty marki*</th><th>Auto dark mode</th></tr>
   <tr><td>Apple Mail (Mac)</td><td class="y">tak</td><td class="y">tak</td><td class="y">tak</td></tr>
-  <tr><td>iPhone / iPad Mail</td><td class="y">tak</td><td class="p">u odbiorcy w Apple Mail tak</td><td class="p">wersja jasna</td></tr>
+  <tr><td>iPhone / iPad Mail</td><td class="y">tak</td><td class="n">kroje zastępcze</td><td class="p">wersja jasna</td></tr>
   <tr><td>Gmail</td><td class="y">tak</td><td class="n">zamienniki</td><td class="p">Gmail rozjaśnia tekst sam, logo zostaje bordowe</td></tr>
-  <tr><td>Outlook (nowy / web / Mac)</td><td class="y">tak</td><td class="p">zależnie od wersji</td><td class="p">częściowo</td></tr>
-  <tr><td>Outlook klasyczny (Windows)</td><td class="y">tak</td><td class="n">Georgia / Courier New</td><td class="n">nie</td></tr>
+  <tr><td>Outlook (nowy / web / Mac)</td><td class="y">tak</td><td class="n">kroje zastępcze</td><td class="p">częściowo</td></tr>
+  <tr><td>Outlook klasyczny (Windows)</td><td class="y">tak</td><td class="n">kroje zastępcze</td><td class="n">nie</td></tr>
   <tr><td>Thunderbird</td><td class="y">tak</td><td class="y">tak</td><td class="y">tak</td></tr>
 </table>
-<p style="color:var(--mute);font-size:13px;margin-top:12px">Wygląd zależy też od programu <b>odbiorcy</b>: mail wysłany z Apple Mail otwarty w Gmailu będzie wyglądał tak jak w wierszu „Gmail”.</p>
+<p style="color:var(--mute);font-size:13px;margin-top:12px">* Fonty marki zobaczy tylko odbiorca w programie, który je obsługuje — patrz <a href="#fonty" style="color:var(--ink)">Fonty marki</a>. Wygląd zależy też od programu <b>odbiorcy</b>: mail wysłany z Apple Mail otwarty w Gmailu będzie wyglądał tak jak w wierszu „Gmail”.</p>
 
+<p style="color:var(--mute);font-size:12px;margin-top:56px;padding-top:16px;border-top:1px solid var(--line)">Wykonano dla BLURBSTUDIO Sp. z o.o. i HAIRISHED® · © 2026 Radosław Prośniak (KHOREI) · <a href="https://github.com/piolun-00/hairished-email/blob/main/LICENSE" style="color:var(--mute)">Licencja</a></p>
 </main></body></html>
